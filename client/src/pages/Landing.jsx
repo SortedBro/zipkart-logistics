@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import ZipkartLogo from '../components/ZipkartLogo.jsx';
 
 const CLIENTS = [
   {
@@ -197,14 +198,7 @@ export default function Landing() {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-20">
           <Link to="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-700 to-indigo-900 flex items-center justify-center text-white font-extrabold text-xl shadow-md">
-              Z
-            </div>
-            <div>
-              <span className="font-extrabold text-xl tracking-tight text-blue-950">Zipkart</span>
-              <span className="text-orange-500 font-extrabold text-xl ml-1">Logistics</span>
-              <p className="text-[10px] text-slate-400 font-semibold tracking-wider uppercase -mt-1">Integrated 3PL &amp; Fleet Solutions</p>
-            </div>
+            <ZipkartLogo className="h-12" />
           </Link>
 
           <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-700">

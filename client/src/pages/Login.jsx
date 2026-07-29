@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import Alert from '../components/Alert.jsx';
+import ZipkartLogo from '../components/ZipkartLogo.jsx';
 
 export default function Login() {
   const { login } = useAuth();
@@ -28,9 +29,8 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-slate-50">
       <div className="w-full max-w-md">
         <div className="text-center mb-6">
-          <Link to="/" className="inline-flex items-center gap-2 font-bold text-xl text-brand-900">
-            <span className="w-8 h-8 rounded-lg bg-accent-500 flex items-center justify-center text-white">Z</span>
-            Zipkart <span className="text-accent-600">Logistics</span>
+          <Link to="/" className="inline-flex items-center justify-center">
+            <ZipkartLogo className="h-14" />
           </Link>
         </div>
         <div className="bg-white rounded-xl border border-slate-200 p-8 shadow-sm">
