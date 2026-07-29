@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 180" fill="none">
+  <!-- Stylized Yellow Z -->
+  <g transform="translate(10, 10)">
+    <path d="M 50 35 L 180 35 L 85 120 L 175 120 L 175 142 L 40 142 L 135 57 L 50 57 Z" fill="#F4B400" />
+    <path d="M 180 35 L 180 48 L 145 78 L 135 57 Z" fill="#E0A300" opacity="0.4" />
+  </g>
+  
+  <!-- Blue ipkart Text -->
+  <text x="172" y="116" font-family="'Satoshi', 'Inter', 'Segoe UI', system-ui, sans-serif" font-weight="800" font-size="86" fill="#0A5CA4" letter-spacing="-1.5">ipkart</text>
+  
+  <!-- Tagline -->
+  <text x="175" y="148" font-family="'Satoshi', 'Inter', 'Segoe UI', system-ui, sans-serif" font-weight="700" font-size="20" fill="#0A5CA4" letter-spacing="-0.2">Connecting India,Delivering Trust</text>
+</svg>
