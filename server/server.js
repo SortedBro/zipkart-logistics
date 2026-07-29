@@ -10,7 +10,20 @@ const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
 
 connectDB();
 
-app.use(cors({ origin: CLIENT_URL, credentials: true }));
+const clientOrigin = process.env.CLIENT_URL || 'http://localhost:5173';
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || origin === clientOrigin || origin.includes('onrender.com') || origin.includes('localhost')) {
+        callback(null, true);
+      } else {
+        callback(null, true);
+      }
+    },
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

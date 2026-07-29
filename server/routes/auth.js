@@ -23,9 +23,11 @@ function signToken(user, companyName) {
 }
 
 function setCookie(res, token) {
+  const isProd = process.env.NODE_ENV === 'production' || (process.env.CLIENT_URL && !process.env.CLIENT_URL.includes('localhost'));
   res.cookie('token', token, {
     httpOnly: true,
-    sameSite: 'lax',
+    sameSite: isProd ? 'none' : 'lax',
+    secure: isProd ? true : false,
     maxAge: 1000 * 60 * 60 * 24 * 7,
   });
 }
