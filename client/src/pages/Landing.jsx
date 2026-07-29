@@ -1,6 +1,82 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
+const CLIENTS = [
+  {
+    name: 'Flipkart',
+    category: 'E-Commerce Marketplace',
+    tagline: 'Full FTL & Regional Transport Partner',
+    bgColor: 'bg-blue-50 border-blue-200',
+    logo: (
+      <div className="flex items-center gap-1 font-black text-2xl tracking-tighter text-[#2874F0]">
+        <span>Flipkart</span>
+        <div className="w-6 h-6 rounded bg-[#FFE500] flex items-center justify-center text-[#2874F0] font-black text-xs shadow-sm transform rotate-3">
+          f
+        </div>
+      </div>
+    ),
+  },
+  {
+    name: 'Flipkart Minutes',
+    category: 'Quick Commerce Logistics',
+    tagline: '10-Minute Express Darkstore Transit',
+    bgColor: 'bg-pink-50 border-pink-200',
+    logo: (
+      <div className="bg-[#9E0B49] text-white px-3.5 py-1.5 rounded-lg flex flex-col items-center shadow-md">
+        <span className="text-[10px] font-bold tracking-widest text-slate-200 uppercase">Flipkart</span>
+        <span className="text-[#FFEA00] font-black text-sm tracking-wider italic uppercase">MINUTES</span>
+      </div>
+    ),
+  },
+  {
+    name: 'Meesho',
+    category: 'Social E-Commerce Leader',
+    tagline: 'Pan-India Last Mile & PTL Dispatch',
+    bgColor: 'bg-purple-50 border-purple-200',
+    logo: (
+      <div className="flex items-center gap-1 font-black text-2xl tracking-tight text-[#812450]">
+        <span>meesho</span>
+      </div>
+    ),
+  },
+  {
+    name: 'Myntra',
+    category: 'Fashion & Lifestyle Retail',
+    tagline: 'Dedicated Hub-to-Hub Express Transit',
+    bgColor: 'bg-orange-50 border-orange-200',
+    logo: (
+      <div className="flex items-center gap-2">
+        <span className="text-2xl font-black bg-gradient-to-r from-pink-600 via-orange-500 to-pink-600 bg-clip-text text-transparent">
+          Myntra
+        </span>
+      </div>
+    ),
+  },
+  {
+    name: 'Blinkit',
+    category: 'Quick Commerce & Hyperlocal',
+    tagline: 'Rapid Grocery & Darkstore Replenishment',
+    bgColor: 'bg-amber-50 border-amber-200',
+    logo: (
+      <div className="flex items-center gap-0.5 text-2xl font-black">
+        <span className="text-slate-900">blink</span>
+        <span className="text-[#148535]">it</span>
+      </div>
+    ),
+  },
+  {
+    name: 'V-Xpress',
+    category: 'Express Cargo & Door-to-Door',
+    tagline: 'Heavy Freight & Nationwide Parcel Express',
+    bgColor: 'bg-indigo-50 border-indigo-200',
+    logo: (
+      <div className="flex items-center gap-1 text-2xl font-black text-[#1B365D]">
+        <span className="text-[#F58220] italic">V-</span>Xpress
+      </div>
+    ),
+  },
+];
+
 const SERVICES = [
   {
     title: '3PL Warehousing & CFA Management',
@@ -66,7 +142,7 @@ const FEATURES = [
 
 const INDUSTRIES = [
   { name: 'FMCG & Consumer Goods', icon: '🛒' },
-  { name: 'E-Commerce & Retail', icon: '📦' },
+  { name: 'E-Commerce & Quick Commerce', icon: '📦' },
   { name: 'Pharmaceuticals & Healthcare', icon: '💊' },
   { name: 'Industrial & Heavy Manufacturing', icon: '🏗️' },
   { name: 'Agro & Perishable Products', icon: '🌾' },
@@ -92,7 +168,7 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen flex flex-col font-sans bg-slate-50 text-slate-800">
-      {/* 1. Top Utility Header (Matching Shree Vasu Logistics Top Bar) */}
+      {/* 1. Top Utility Header */}
       <div className="bg-[#152554] text-white text-xs py-2 px-4 border-b border-white/10">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <div className="flex items-center gap-6">
@@ -133,6 +209,7 @@ export default function Landing() {
 
           <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-700">
             <a href="#services" className="hover:text-blue-700 transition">Services</a>
+            <a href="#clients" className="hover:text-blue-700 transition">Clients</a>
             <a href="#solutions" className="hover:text-blue-700 transition">Features</a>
             <a href="#industries" className="hover:text-blue-700 transition">Industries</a>
             <a href="#contact" className="hover:text-blue-700 transition">Contact Us</a>
@@ -158,7 +235,7 @@ export default function Landing() {
         </div>
       </header>
 
-      {/* 3. Hero Section (Matching Shree Vasu Logistics Theme & Style) */}
+      {/* 3. Hero Section */}
       <section className="relative bg-gradient-to-r from-[#0F1E42] via-[#1A2E63] to-[#0F1E42] text-white overflow-hidden py-24">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 grid lg:grid-cols-12 gap-12 items-center">
@@ -239,7 +316,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* 4. 3 Core Service Banner Strip (Inspired by Shree Vasu 3 main blocks) */}
+      {/* 4. 3 Core Service Banner Strip */}
       <section id="services" className="max-w-7xl mx-auto px-4 sm:px-6 -mt-10 relative z-20">
         <div className="grid md:grid-cols-3 gap-6">
           {SERVICES.map((s, idx) => (
@@ -263,35 +340,69 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* 5. Comprehensive Features Section */}
-      <section id="solutions" className="py-20 max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
+      {/* 5. OUR TRUSTED CLIENTS SHOWCASE SECTION */}
+      <section id="clients" className="py-20 max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
           <span className="text-orange-500 font-extrabold text-xs tracking-widest uppercase">
-            All-In-One Operations Platform
+            Trusted By Industry Leaders
           </span>
           <h2 className="text-3xl font-extrabold text-slate-900">
-            Everything your transport &amp; 3PL enterprise needs
+            Powering Logistics For India’s Top Enterprises &amp; E-Commerce Giants
           </h2>
           <p className="text-slate-600 text-sm">
-            Simplify daily dispatch, Party accounting, vehicle P&amp;L, and document compliance in one unified portal.
+            We deliver high-efficiency 3PL warehousing, Darkstore replenishment, and nationwide express transit for leading brands.
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {FEATURES.map((f, i) => (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+          {CLIENTS.map((c, i) => (
             <div
               key={i}
-              className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition space-y-3"
+              className={`${c.bgColor} rounded-2xl border p-5 flex flex-col items-center justify-between text-center shadow-sm hover:shadow-md transition transform hover:-translate-y-1 group min-h-[160px]`}
             >
-              <div className="text-4xl">{f.icon}</div>
-              <h3 className="font-bold text-slate-900 text-base">{f.title}</h3>
-              <p className="text-sm text-slate-600 leading-relaxed">{f.desc}</p>
+              <div className="h-16 flex items-center justify-center w-full">
+                {c.logo}
+              </div>
+              <div className="mt-2 border-t border-slate-200/60 pt-2 w-full">
+                <h4 className="font-bold text-xs text-slate-900">{c.name}</h4>
+                <p className="text-[10px] text-slate-500 font-medium leading-tight mt-0.5">{c.tagline}</p>
+              </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* 6. Stats Section */}
+      {/* 6. Comprehensive Features Section */}
+      <section id="solutions" className="py-20 bg-slate-100 border-y border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
+            <span className="text-blue-700 font-extrabold text-xs tracking-widest uppercase">
+              All-In-One Operations Platform
+            </span>
+            <h2 className="text-3xl font-extrabold text-slate-900">
+              Everything your transport &amp; 3PL enterprise needs
+            </h2>
+            <p className="text-slate-600 text-sm">
+              Simplify daily dispatch, Party accounting, vehicle P&amp;L, and document compliance in one unified portal.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {FEATURES.map((f, i) => (
+              <div
+                key={i}
+                className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition space-y-3"
+              >
+                <div className="text-4xl">{f.icon}</div>
+                <h3 className="font-bold text-slate-900 text-base">{f.title}</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 7. Stats Section */}
       <section className="bg-[#152554] text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
@@ -305,7 +416,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* 7. Industries We Serve Section */}
+      {/* 8. Industries We Serve Section */}
       <section id="industries" className="py-20 max-w-7xl mx-auto px-4 sm:px-6">
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
           <span className="text-blue-700 font-extrabold text-xs tracking-widest uppercase">
@@ -332,7 +443,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* 8. Contact & Inquiry Section */}
+      {/* 9. Contact & Inquiry Section */}
       <section id="contact" className="py-20 bg-slate-100 border-t border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 grid lg:grid-cols-12 gap-12">
           <div className="lg:col-span-6 space-y-6">
@@ -439,7 +550,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* 9. Footer */}
+      {/* 10. Footer */}
       <footer className="bg-[#0D1836] text-white py-12 border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-8 text-xs text-slate-400">
           <div className="space-y-3">
@@ -453,6 +564,7 @@ export default function Landing() {
             <span className="font-bold text-white block text-sm mb-3 uppercase tracking-wider">Quick Links</span>
             <ul className="space-y-2">
               <li><a href="#services" className="hover:text-white">Our Services</a></li>
+              <li><a href="#clients" className="hover:text-white">Our Clients</a></li>
               <li><a href="#solutions" className="hover:text-white">Features &amp; Bilty</a></li>
               <li><a href="#industries" className="hover:text-white">Industries Served</a></li>
               <li><Link to="/login" className="hover:text-white">Portal Sign In</Link></li>
