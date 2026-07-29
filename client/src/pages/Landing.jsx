@@ -108,35 +108,35 @@ const SERVICES = [
   },
 ];
 
-const FEATURES = [
+const MODULES = [
   {
-    title: 'Digital Bilty (LR) Generation',
-    desc: 'Generate professional, print-ready Bilty invoices in seconds with auto LR numbering, freight calculation, and WhatsApp shareability.',
+    title: 'Digital Bilty (LR) Dispatch',
+    desc: 'Instant print-ready Bilty generation, auto LR numbering, party freight calculation, and WhatsApp document sharing.',
     icon: '📄',
   },
   {
-    title: 'Truck-Wise P&L & Fuel Expense Tracking',
-    desc: 'Monitor exact revenue vs expense (fuel, toll, driver salary, maintenance) for every vehicle in your fleet.',
+    title: 'Truck & Reminders Compliance',
+    desc: 'Vehicle specifications, odometer tracking, service due alerts, and document storage (RC, Insurance, Fitness, PUC, Tax).',
     icon: '🚚',
   },
   {
-    title: 'Party Ledger & Automated Billing',
-    desc: 'Real-time party balance tracking, automated ledger statements, and instant payment receipt accounting.',
+    title: 'Party Ledgers & Accounting',
+    desc: 'Automated party balance calculations, ledger statements, freight receipts, and outstanding invoice logs.',
     icon: '💰',
   },
   {
-    title: 'Document Archival & Compliance',
-    desc: 'Upload and securely store RC, Insurance, Permit, Fitness, PUC, and Tax documents with automated expiry alert reminders.',
-    icon: '📂',
+    title: 'Truck-Wise Profit & Loss Analytics',
+    desc: 'Real-time vehicle profitability breakdown tracking fuel, toll, maintenance, and driver expenses per truck.',
+    icon: '📊',
   },
   {
     title: 'Trip Lifecycle Tracking',
-    desc: 'Track trip status seamlessly from dispatch and loading to transit checkpoints and destination delivery.',
+    desc: 'Track trip status from dispatch and loading to checkpoint transit updates and destination delivery.',
     icon: '🛣️',
   },
   {
-    title: 'Staff Roles & Access Control',
-    desc: 'Grant custom access permissions to drivers, managers, and accountants while owner retains full financial control.',
+    title: 'Staff Roles & Multi-User Access',
+    desc: 'Owner grants role-based access for dispatch operators, managers, and accountants with secure multi-tenant isolation.',
     icon: '👥',
   },
 ];
@@ -154,7 +154,7 @@ const STATS = [
   { value: '500+', label: 'Active Fleet Vehicles' },
   { value: '50,000+', label: 'Digital Bilties Issued' },
   { value: '99.9%', label: 'On-Time Transit Safety' },
-  { value: '100+', label: 'Enterprise Clients' },
+  { value: '100%', label: 'Internal Data Security' },
 ];
 
 export default function Landing() {
@@ -189,7 +189,7 @@ export default function Landing() {
           <div className="flex items-center gap-4 text-slate-300">
             <span>Logistics Park, India</span>
             <span className="text-white/30">|</span>
-            <Link to="/login" className="text-orange-400 hover:text-orange-300 font-medium">Portal Login</Link>
+            <Link to="/login" className="text-orange-400 hover:text-orange-300 font-semibold">Staff &amp; Owner Portal Sign In</Link>
           </div>
         </div>
       </div>
@@ -204,9 +204,9 @@ export default function Landing() {
           <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-700">
             <a href="#services" className="hover:text-blue-700 transition">Services</a>
             <a href="#clients" className="hover:text-blue-700 transition">Clients</a>
-            <a href="#solutions" className="hover:text-blue-700 transition">Features</a>
+            <a href="#modules" className="hover:text-blue-700 transition">Portal Modules</a>
             <a href="#industries" className="hover:text-blue-700 transition">Industries</a>
-            <a href="#contact" className="hover:text-blue-700 transition">Contact Us</a>
+            <a href="#contact" className="hover:text-blue-700 transition">Contact Support</a>
           </nav>
 
           <div className="flex items-center gap-3">
@@ -220,7 +220,7 @@ export default function Landing() {
               to="/register"
               className="text-sm font-semibold px-5 py-2.5 rounded-lg bg-orange-500 hover:bg-orange-600 text-white shadow-md hover:shadow-lg transition flex items-center gap-1.5"
             >
-              Start Free Trial
+              Setup Company / Staff Access
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
@@ -236,74 +236,74 @@ export default function Landing() {
           <div className="lg:col-span-7 space-y-6">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs font-semibold uppercase tracking-widest">
               <span className="w-2 h-2 rounded-full bg-orange-400 animate-ping"></span>
-              Complete Integrated 3PL Logistics &amp; Fleet Management
+              Enterprise Operations &amp; Fleet Portal
             </div>
 
             <h1 className="text-3xl sm:text-5xl font-extrabold leading-tight tracking-tight text-white">
-              Trust us to elevate your logistics with <span className="text-orange-400">precision &amp; excellence</span> at every turn.
+              Connecting India, Delivering Trust — <span className="text-orange-400">Integrated Operations</span> Portal.
             </h1>
 
             <p className="text-base sm:text-lg text-slate-300 max-w-2xl leading-relaxed">
-              Our core competency lies in providing <strong>Complete Integrated 3PL Logistics Solutions</strong>: CFA Management, Customized Warehousing, Primary &amp; Secondary Transportation, Last Mile Delivery, Digital Bilty, and Fleet Profitability Analytics.
+              Dedicated Enterprise Management System for <strong>Zipkart Logistics</strong> teams and fleet operators. Manage Bilty dispatch, truck profit analytics, party ledgers, and staff operations with 100% data security.
             </p>
 
             <div className="pt-4 flex flex-wrap items-center gap-4">
               <Link
-                to="/register"
+                to="/login"
                 className="px-8 py-3.5 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm shadow-xl hover:shadow-orange-500/30 transition transform hover:-translate-y-0.5 flex items-center gap-2"
               >
-                Get Started Now
+                Sign In To Portal
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
               </Link>
-              <a
-                href="#services"
+              <Link
+                to="/register"
                 className="px-7 py-3.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-semibold text-sm border border-white/20 transition"
               >
-                Explore Services
-              </a>
+                Create Company Account
+              </Link>
             </div>
           </div>
 
           <div className="lg:col-span-5">
             <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-2xl text-white space-y-5">
               <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                <h3 className="font-bold text-lg">Instant Transport Management</h3>
-                <span className="text-xs bg-orange-500 text-white px-2.5 py-1 rounded font-semibold">Live System</span>
+                <h3 className="font-bold text-lg">Zipkart Operations System</h3>
+                <span className="text-xs bg-emerald-500 text-white px-2.5 py-1 rounded font-semibold">Active Portal</span>
               </div>
 
               <div className="space-y-3">
                 <div className="bg-white/5 border border-white/10 rounded-xl p-3.5 flex items-center justify-between text-sm">
                   <div>
-                    <span className="text-slate-400 block text-xs">LR / Bilty Generator</span>
-                    <span className="font-semibold text-white">Instant PDF &amp; Auto LR Numbering</span>
+                    <span className="text-slate-400 block text-xs">Owner &amp; Staff Security</span>
+                    <span className="font-semibold text-white">Private Company Isolation</span>
+                  </div>
+                  <span className="text-emerald-400 font-semibold text-xs">Secured</span>
+                </div>
+
+                <div className="bg-white/5 border border-white/10 rounded-xl p-3.5 flex items-center justify-between text-sm">
+                  <div>
+                    <span className="text-slate-400 block text-xs">Bilty &amp; LR Dispatch</span>
+                    <span className="font-semibold text-white">Instant PDF &amp; Auto LR</span>
                   </div>
                   <span className="text-emerald-400 font-semibold text-xs">Ready</span>
                 </div>
 
                 <div className="bg-white/5 border border-white/10 rounded-xl p-3.5 flex items-center justify-between text-sm">
                   <div>
-                    <span className="text-slate-400 block text-xs">Fleet &amp; Driver Control</span>
-                    <span className="font-semibold text-white">Vehicle Expiry &amp; Maintenance</span>
-                  </div>
-                  <span className="text-emerald-400 font-semibold text-xs">Active</span>
-                </div>
-
-                <div className="bg-white/5 border border-white/10 rounded-xl p-3.5 flex items-center justify-between text-sm">
-                  <div>
-                    <span className="text-slate-400 block text-xs">Party Accounts &amp; Ledgers</span>
-                    <span className="font-semibold text-white">Automated Ledger &amp; P&amp;L</span>
+                    <span className="text-slate-400 block text-xs">Fleet &amp; Document Expiry</span>
+                    <span className="font-semibold text-white">RC, Insurance &amp; Fitness Alerts</span>
                   </div>
                   <span className="text-emerald-400 font-semibold text-xs">Tracked</span>
                 </div>
               </div>
 
               <Link
-                to="/register"
+                to="/login"
                 className="block text-center w-full py-3 bg-white text-blue-950 font-bold rounded-xl text-sm shadow hover:bg-slate-100 transition"
               >
-                Create Free Company Account
+                Sign In to Company Portal
               </Link>
             </div>
           </div>
@@ -327,7 +327,7 @@ export default function Landing() {
                 href="#contact"
                 className="mt-6 inline-flex items-center gap-1 text-xs font-bold text-blue-700 hover:text-blue-900 uppercase tracking-wider"
               >
-                Inquire Now &rarr;
+                Inquire Operations &rarr;
               </a>
             </div>
           ))}
@@ -341,7 +341,7 @@ export default function Landing() {
             Trusted By Industry Leaders
           </span>
           <h2 className="text-3xl font-extrabold text-slate-900">
-            Powering Logistics For India’s Top Enterprises &amp; E-Commerce Giants
+            Powering Freight &amp; Logistics For India’s Top E-Commerce Giants
           </h2>
           <p className="text-slate-600 text-sm">
             We deliver high-efficiency 3PL warehousing, Darkstore replenishment, and nationwide express transit for leading brands.
@@ -366,30 +366,30 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* 6. Comprehensive Features Section */}
-      <section id="solutions" className="py-20 bg-slate-100 border-y border-slate-200">
+      {/* 6. Operations & Portal Modules Section */}
+      <section id="modules" className="py-20 bg-slate-100 border-y border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
             <span className="text-blue-700 font-extrabold text-xs tracking-widest uppercase">
-              All-In-One Operations Platform
+              Internal Operations Portal
             </span>
             <h2 className="text-3xl font-extrabold text-slate-900">
-              Everything your transport &amp; 3PL enterprise needs
+              Core Modules for Owner &amp; Company Staff
             </h2>
             <p className="text-slate-600 text-sm">
-              Simplify daily dispatch, Party accounting, vehicle P&amp;L, and document compliance in one unified portal.
+              Designed specifically for internal team members, dispatch managers, accountants, and company operators.
             </p>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {FEATURES.map((f, i) => (
+            {MODULES.map((m, i) => (
               <div
                 key={i}
                 className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition space-y-3"
               >
-                <div className="text-4xl">{f.icon}</div>
-                <h3 className="font-bold text-slate-900 text-base">{f.title}</h3>
-                <p className="text-sm text-slate-600 leading-relaxed">{f.desc}</p>
+                <div className="text-4xl">{m.icon}</div>
+                <h3 className="font-bold text-slate-900 text-base">{m.title}</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">{m.desc}</p>
               </div>
             ))}
           </div>
@@ -441,10 +441,10 @@ export default function Landing() {
       <section id="contact" className="py-20 bg-slate-100 border-t border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 grid lg:grid-cols-12 gap-12">
           <div className="lg:col-span-6 space-y-6">
-            <span className="text-orange-500 font-extrabold text-xs tracking-widest uppercase">Get In Touch</span>
-            <h2 className="text-3xl font-extrabold text-slate-900">Ready to transform your logistics operations?</h2>
+            <span className="text-orange-500 font-extrabold text-xs tracking-widest uppercase">Contact Operations</span>
+            <h2 className="text-3xl font-extrabold text-slate-900">Zipkart Logistics Corporate Support</h2>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Connect with our logistics experts to discuss customized 3PL warehousing, fleet deployment, or digital Bilty management.
+              For fleet inquiries, staff access support, or internal operations assistance, reach out to our corporate team.
             </p>
 
             <div className="space-y-4 text-sm text-slate-700">
@@ -476,7 +476,7 @@ export default function Landing() {
           </div>
 
           <div className="lg:col-span-6 bg-white rounded-2xl border border-slate-200 shadow-lg p-8">
-            <h3 className="font-bold text-xl text-slate-900 mb-4">Send Us a Message</h3>
+            <h3 className="font-bold text-xl text-slate-900 mb-4">Send Us an Inquiry</h3>
 
             {submitted ? (
               <div className="bg-emerald-50 text-emerald-800 p-4 rounded-xl text-sm font-semibold border border-emerald-200">
@@ -510,7 +510,7 @@ export default function Landing() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-600 mb-1">Company Name</label>
+                    <label className="block text-xs font-semibold text-slate-600 mb-1">Company / Branch</label>
                     <input
                       type="text"
                       placeholder="e.g. Zipkart Express"
@@ -522,10 +522,10 @@ export default function Landing() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 mb-1">Requirement Details</label>
+                  <label className="block text-xs font-semibold text-slate-600 mb-1">Inquiry Details</label>
                   <textarea
                     rows={3}
-                    placeholder="Tell us about your fleet or logistics requirements..."
+                    placeholder="Tell us about your requirements..."
                     value={contactForm.message}
                     onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
                     className="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -548,9 +548,9 @@ export default function Landing() {
       <footer className="bg-[#0D1836] text-white py-12 border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-8 text-xs text-slate-400">
           <div className="space-y-3">
-            <div className="font-extrabold text-lg text-white">Zipkart Logistics</div>
+            <ZipkartLogo className="h-10" variant="dark" />
             <p className="leading-relaxed">
-              Complete Integrated 3PL Logistics, CFA Management, Fleet Tracking, and Bilty Operations platform.
+              Complete Integrated 3PL Logistics, CFA Management, Fleet Tracking, and Internal Bilty Operations system.
             </p>
           </div>
 
@@ -559,18 +559,18 @@ export default function Landing() {
             <ul className="space-y-2">
               <li><a href="#services" className="hover:text-white">Our Services</a></li>
               <li><a href="#clients" className="hover:text-white">Our Clients</a></li>
-              <li><a href="#solutions" className="hover:text-white">Features &amp; Bilty</a></li>
+              <li><a href="#modules" className="hover:text-white">Portal Modules</a></li>
               <li><a href="#industries" className="hover:text-white">Industries Served</a></li>
-              <li><Link to="/login" className="hover:text-white">Portal Sign In</Link></li>
+              <li><Link to="/login" className="hover:text-white">Staff Sign In</Link></li>
             </ul>
           </div>
 
           <div>
-            <span className="font-bold text-white block text-sm mb-3 uppercase tracking-wider">Solutions</span>
+            <span className="font-bold text-white block text-sm mb-3 uppercase tracking-wider">Internal Operations</span>
             <ul className="space-y-2">
-              <li><span>3PL Warehousing</span></li>
+              <li><span>3PL Warehousing &amp; CFA</span></li>
               <li><span>Primary &amp; Secondary Transit</span></li>
-              <li><span>Fleet P&amp;L Analytics</span></li>
+              <li><span>Truck-Wise P&amp;L Ledger</span></li>
               <li><span>Digital Bilty Generation</span></li>
             </ul>
           </div>
