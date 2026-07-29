@@ -14,4 +14,7 @@ const tripSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+tripSchema.index({ company: 1, createdAt: -1 });
+tripSchema.index({ company: 1, truck: 1 });
+
 module.exports = mongoose.model('Trip', tripSchema);

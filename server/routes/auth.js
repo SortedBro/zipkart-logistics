@@ -1,9 +1,11 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const Company = require('../models/Company');
 const User = require('../models/User');
+const config = require('../config');
 const { requireAuth } = require('../middleware/auth');
+const asyncHandler = require('../middleware/asyncHandler');
+const { authLimiter } = require('../middleware/rateLimit');
 
 const router = express.Router();
 
@@ -17,59 +19,34 @@ function signToken(user, companyName) {
       role: user.role,
       companyName,
     },
-    process.env.JWT_SECRET || 'dev-secret',
-    { expiresIn: '7d' }
+    config.jwtSecret,
+    { expiresIn: config.jwtExpiresIn }
   );
 }
 
 function setCookie(res, token) {
-  const isProd = process.env.NODE_ENV === 'production' || (process.env.CLIENT_URL && !process.env.CLIENT_URL.includes('localhost'));
   res.cookie('token', token, {
     httpOnly: true,
-    sameSite: isProd ? 'none' : 'lax',
-    secure: isProd ? true : false,
+    sameSite: config.isProd ? 'none' : 'lax',
+    secure: config.isProd,
     maxAge: 1000 * 60 * 60 * 24 * 7,
   });
 }
 
-router.post('/register', async (req, res) => {
-  try {
-    const { company_name, city, name, email, password, confirm_password } = req.body;
-    if (!company_name || !name || !email || !password) {
-      return res.status(400).json({ error: 'Please fill all required fields.' });
-    }
-    if (password !== confirm_password) {
-      return res.status(400).json({ error: 'Passwords do not match.' });
-    }
-    const existing = await User.findOne({ email: email.toLowerCase() });
-    if (existing) {
-      return res.status(400).json({ error: 'An account with this email already exists.' });
-    }
+// NOTE: This is a single-company internal application. There is intentionally NO public
+// registration / company sign-up. The first admin is created with `npm run seed:admin`
+// (see server/scripts/seedAdmin.js); further employees are added by an admin from the
+// Staff page (POST /api/staff, admin-only).
 
-    const company = await Company.create({ name: company_name, city });
-    const passwordHash = bcrypt.hashSync(password, 10);
-    const user = await User.create({
-      company: company._id,
-      name,
-      email: email.toLowerCase(),
-      passwordHash,
-      role: 'owner',
-    });
-
-    const token = signToken(user, company.name);
-    setCookie(res, token);
-    res.json({
-      user: { id: user._id, name: user.name, email: user.email, role: user.role, companyName: company.name },
-    });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-router.post('/login', async (req, res) => {
-  try {
+router.post(
+  '/login',
+  authLimiter,
+  asyncHandler(async (req, res) => {
     const { email, password } = req.body;
-    const user = await User.findOne({ email: (email || '').toLowerCase(), active: true }).populate('company');
+    if (typeof email !== 'string' || typeof password !== 'string') {
+      return res.status(400).json({ error: 'Email and password are required.' });
+    }
+    const user = await User.findOne({ email: email.toLowerCase(), active: true }).populate('company');
     if (!user || !bcrypt.compareSync(password || '', user.passwordHash)) {
       return res.status(401).json({ error: 'Invalid email or password.' });
     }
@@ -84,10 +61,8 @@ router.post('/login', async (req, res) => {
         companyName: user.company ? user.company.name : '',
       },
     });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+  })
+);
 
 router.post('/logout', (req, res) => {
   res.clearCookie('token');

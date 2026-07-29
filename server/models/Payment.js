@@ -12,4 +12,6 @@ const paymentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+paymentSchema.index({ company: 1, party: 1, direction: 1 });
+
 module.exports = mongoose.model('Payment', paymentSchema);

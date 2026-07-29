@@ -22,4 +22,8 @@ const biltySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+biltySchema.index({ company: 1, createdAt: -1 });
+biltySchema.index({ company: 1, party: 1 });
+biltySchema.index({ company: 1, truck: 1 });
+
 module.exports = mongoose.model('Bilty', biltySchema);

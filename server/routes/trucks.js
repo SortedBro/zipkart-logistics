@@ -1,9 +1,11 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const Truck = require('../models/Truck');
 const Bilty = require('../models/Bilty');
 const Trip = require('../models/Trip');
 const TruckExpense = require('../models/TruckExpense');
 const { requireAuth } = require('../middleware/auth');
+const asyncHandler = require('../middleware/asyncHandler');
 
 const router = express.Router();
 
@@ -21,20 +23,44 @@ async function computePL(companyId, truckId) {
   return { income, expense, profit: income - expense };
 }
 
-router.get('/', requireAuth, async (req, res) => {
-  try {
-    const trucks = await Truck.find({ company: req.user.companyId }).sort({ number: 1 });
-    const withPL = await Promise.all(
-      trucks.map(async (t) => ({ ...t.toObject(), pl: await computePL(t.company, t._id) }))
-    );
-    res.json({ trucks: withPL });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+router.get(
+  '/',
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const companyId = new mongoose.Types.ObjectId(req.user.companyId);
+    // Exclude the heavy base64 `documents` blobs from the list payload.
+    const trucks = await Truck.find({ company: companyId }).select('-documents').sort({ number: 1 }).lean();
 
-router.post('/', requireAuth, async (req, res) => {
-  try {
+    // Compute P&L for every truck in two aggregations instead of 2-per-truck (fixes N+1).
+    const [incomeByTruck, expenseByTruck] = await Promise.all([
+      Bilty.aggregate([
+        { $match: { company: companyId, truck: { $ne: null } } },
+        { $group: { _id: '$truck', total: { $sum: { $add: ['$freight', '$otherCharges'] } } } },
+      ]),
+      TruckExpense.aggregate([
+        { $match: { company: companyId } },
+        { $group: { _id: '$truck', total: { $sum: '$amount' } } },
+      ]),
+    ]);
+
+    const incomeMap = new Map(incomeByTruck.map((r) => [String(r._id), r.total]));
+    const expenseMap = new Map(expenseByTruck.map((r) => [String(r._id), r.total]));
+
+    const withPL = trucks.map((t) => {
+      const tid = String(t._id);
+      const income = incomeMap.get(tid) || 0;
+      const expense = expenseMap.get(tid) || 0;
+      return { ...t, pl: { income, expense, profit: income - expense } };
+    });
+
+    res.json({ trucks: withPL });
+  })
+);
+
+router.post(
+  '/',
+  requireAuth,
+  asyncHandler(async (req, res) => {
     const {
       number,
       type,
@@ -88,13 +114,13 @@ router.post('/', requireAuth, async (req, res) => {
     });
 
     res.status(201).json({ truck });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+  })
+);
 
-router.put('/:id', requireAuth, async (req, res) => {
-  try {
+router.put(
+  '/:id',
+  requireAuth,
+  asyncHandler(async (req, res) => {
     const truck = await Truck.findOne({ _id: req.params.id, company: req.user.companyId });
     if (!truck) return res.status(404).json({ error: 'Truck not found.' });
 
@@ -131,14 +157,13 @@ router.put('/:id', requireAuth, async (req, res) => {
 
     await truck.save();
     res.json({ truck });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+  })
+);
 
-
-router.get('/:id', requireAuth, async (req, res) => {
-  try {
+router.get(
+  '/:id',
+  requireAuth,
+  asyncHandler(async (req, res) => {
     const truck = await Truck.findOne({ _id: req.params.id, company: req.user.companyId });
     if (!truck) return res.status(404).json({ error: 'Truck not found.' });
 
@@ -148,13 +173,13 @@ router.get('/:id', requireAuth, async (req, res) => {
     const bilties = await Bilty.find({ company: req.user.companyId, truck: truck._id }).sort({ biltyDate: -1 });
 
     res.json({ truck, pl, expenses, trips, bilties });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+  })
+);
 
-router.post('/:id/expenses', requireAuth, async (req, res) => {
-  try {
+router.post(
+  '/:id/expenses',
+  requireAuth,
+  asyncHandler(async (req, res) => {
     const { category, amount, expense_date, note } = req.body;
     if (!category || !amount) return res.status(400).json({ error: 'Category and amount are required.' });
     const expense = await TruckExpense.create({
@@ -166,9 +191,7 @@ router.post('/:id/expenses', requireAuth, async (req, res) => {
       note,
     });
     res.status(201).json({ expense });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+  })
+);
 
 module.exports = router;

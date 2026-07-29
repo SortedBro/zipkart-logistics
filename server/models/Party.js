@@ -13,4 +13,6 @@ const partySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+partySchema.index({ company: 1, name: 1 });
+
 module.exports = mongoose.model('Party', partySchema);

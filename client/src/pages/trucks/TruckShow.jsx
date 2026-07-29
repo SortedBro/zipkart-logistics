@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { api } from '../../api';
+import { api, isPdfDoc } from '../../api';
 import Alert from '../../components/Alert.jsx';
 
 function money(n) {
@@ -170,7 +170,7 @@ export default function TruckShow() {
                 {Object.entries(DOC_LABELS).map(([key, label]) => {
                   const val = docs[key];
                   if (!val) return null;
-                  const isPdf = val.startsWith('data:application/pdf');
+                  const isPdf = isPdfDoc(val);
 
                   return (
                     <div key={key} className="border border-slate-200 rounded-lg p-3 flex flex-col items-center justify-between text-center bg-slate-50">

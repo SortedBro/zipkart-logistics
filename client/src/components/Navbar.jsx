@@ -13,7 +13,12 @@ export default function Navbar() {
     { to: '/trucks', label: 'Trucks' },
     { to: '/trips', label: 'Trips' },
   ];
-  if (user?.role === 'owner') links.push({ to: '/staff', label: 'Staff' });
+  if (user?.role === 'owner') {
+    links.push({ to: '/staff', label: 'Staff' });
+    links.push({ to: '/settings', label: 'Settings' });
+  }
+
+  const roleLabel = user?.role === 'owner' ? 'Admin' : 'Employee';
 
   return (
     <header className="bg-brand-900 text-white">
@@ -36,7 +41,7 @@ export default function Navbar() {
           <div className="flex items-center gap-3">
             <div className="hidden sm:block text-right text-xs leading-tight">
               <div className="font-semibold">{user?.name}</div>
-              <div className="text-white/60">{user?.companyName} · {user?.role}</div>
+              <div className="text-white/60">{user?.companyName} · {roleLabel}</div>
             </div>
             <button onClick={logout} className="text-sm bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-md">
               Logout

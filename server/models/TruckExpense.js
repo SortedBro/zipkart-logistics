@@ -12,4 +12,6 @@ const truckExpenseSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+truckExpenseSchema.index({ company: 1, truck: 1 });
+
 module.exports = mongoose.model('TruckExpense', truckExpenseSchema);

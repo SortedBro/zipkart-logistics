@@ -41,5 +41,7 @@ const truckSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+truckSchema.index({ company: 1, number: 1 });
+
 module.exports = mongoose.model('Truck', truckSchema);
 

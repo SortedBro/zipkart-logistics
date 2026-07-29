@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { api } from '../../api';
+import { api, isPdfDoc } from '../../api';
 import Alert from '../../components/Alert.jsx';
 
 const TRUCK_TYPES = [
@@ -81,23 +81,31 @@ export default function TruckNew() {
     setForm((f) => ({ ...f, [key]: value }));
   }
 
-  function handleFileChange(docKey, e) {
+  function setDoc(docKey, value) {
+    setForm((f) => ({ ...f, documents: { ...f.documents, [docKey]: value } }));
+  }
+
+  async function handleFileChange(docKey, e) {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
     if (file.size > 5 * 1024 * 1024) {
       setError(`File size of ${file.name} exceeds 5MB limit.`);
       return;
     }
+    setError('');
+    // Prefer object storage (stores a URL); fall back to inline base64 when not configured.
+    try {
+      if (await api.uploadEnabled()) {
+        const { url } = await api.upload('/uploads', file);
+        setDoc(docKey, url);
+        return;
+      }
+    } catch (err) {
+      setError(err.message);
+      return;
+    }
     const reader = new FileReader();
-    reader.onload = (evt) => {
-      setForm((f) => ({
-        ...f,
-        documents: {
-          ...f.documents,
-          [docKey]: evt.target.result,
-        },
-      }));
-    };
+    reader.onload = (evt) => setDoc(docKey, evt.target.result);
     reader.readAsDataURL(file);
   }
 
@@ -414,7 +422,7 @@ export default function TruckNew() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {DOC_DEFINITIONS.map((doc) => {
                 const docValue = form.documents[doc.key];
-                const isPdf = docValue?.startsWith('data:application/pdf');
+                const isPdf = isPdfDoc(docValue);
 
                 return (
                   <div

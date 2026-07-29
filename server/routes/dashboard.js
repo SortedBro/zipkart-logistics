@@ -7,11 +7,14 @@ const Party = require('../models/Party');
 const Payment = require('../models/Payment');
 const TruckExpense = require('../models/TruckExpense');
 const { requireAuth } = require('../middleware/auth');
+const asyncHandler = require('../middleware/asyncHandler');
 
 const router = express.Router();
 
-router.get('/', requireAuth, async (req, res) => {
-  try {
+router.get(
+  '/',
+  requireAuth,
+  asyncHandler(async (req, res) => {
     const companyId = new mongoose.Types.ObjectId(req.user.companyId);
 
     const [totalBilties, totalTrucks, activeTrips, totalParties] = await Promise.all([
@@ -65,9 +68,7 @@ router.get('/', requireAuth, async (req, res) => {
       recentBilties,
       recentTrips,
     });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+  })
+);
 
 module.exports = router;

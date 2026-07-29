@@ -217,10 +217,10 @@ export default function Landing() {
               Sign In
             </Link>
             <Link
-              to="/register"
+              to="/login"
               className="text-sm font-semibold px-5 py-2.5 rounded-lg bg-orange-500 hover:bg-orange-600 text-white shadow-md hover:shadow-lg transition flex items-center gap-1.5"
             >
-              Setup Company / Staff Access
+              Portal Login
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
@@ -257,12 +257,12 @@ export default function Landing() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
               </Link>
-              <Link
-                to="/register"
+              <a
+                href="#contact"
                 className="px-7 py-3.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-semibold text-sm border border-white/20 transition"
               >
-                Create Company Account
-              </Link>
+                Request Access
+              </a>
             </div>
           </div>
 

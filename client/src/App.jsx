@@ -1,8 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
 import Landing from './pages/Landing.jsx';
 import Login from './pages/Login.jsx';
-import Register from './pages/Register.jsx';
 import Dashboard from './pages/Dashboard.jsx';
+import Settings from './pages/Settings.jsx';
 import NotFound from './pages/NotFound.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 
@@ -29,7 +29,6 @@ export default function App() {
     <Routes>
       <Route path="/" element={<Landing />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
 
       <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
 
@@ -50,6 +49,8 @@ export default function App() {
 
       <Route path="/staff" element={<ProtectedRoute ownerOnly><StaffList /></ProtectedRoute>} />
       <Route path="/staff/new" element={<ProtectedRoute ownerOnly><StaffNew /></ProtectedRoute>} />
+
+      <Route path="/settings" element={<ProtectedRoute ownerOnly><Settings /></ProtectedRoute>} />
 
       <Route path="*" element={<NotFound />} />
     </Routes>

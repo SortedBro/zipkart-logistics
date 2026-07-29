@@ -62,8 +62,8 @@ export default function Login() {
               {busy ? 'Logging in…' : 'Login'}
             </button>
           </form>
-          <p className="text-sm text-slate-500 mt-6 text-center">
-            Account nahi hai? <Link to="/register" className="text-brand-700 font-semibold">Register karo</Link>
+          <p className="text-xs text-slate-400 mt-6 text-center">
+            Access is managed by your administrator. Contact them if you need an account.
           </p>
         </div>
       </div>

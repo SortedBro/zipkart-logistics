@@ -1,8 +1,10 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const Party = require('../models/Party');
 const Bilty = require('../models/Bilty');
 const Payment = require('../models/Payment');
 const { requireAuth } = require('../middleware/auth');
+const asyncHandler = require('../middleware/asyncHandler');
 
 const router = express.Router();
 
@@ -30,23 +32,57 @@ async function computeBalance(companyId, partyId) {
   return { party, balance };
 }
 
-router.get('/', requireAuth, async (req, res) => {
-  try {
-    const parties = await Party.find({ company: req.user.companyId }).sort({ name: 1 });
-    const withBalance = await Promise.all(
-      parties.map(async (p) => {
-        const info = await computeBalance(req.user.companyId, p._id);
-        return { ...p.toObject(), balance: info.balance };
-      })
-    );
-    res.json({ parties: withBalance });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+router.get(
+  '/',
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const companyId = new mongoose.Types.ObjectId(req.user.companyId);
+    const parties = await Party.find({ company: companyId }).sort({ name: 1 }).lean();
 
-router.post('/', requireAuth, async (req, res) => {
-  try {
+    // Compute every party's balance in two aggregations instead of 3-per-party (fixes N+1).
+    // Balance formula is preserved exactly: openingBalance + billed - paidIn + paidOut,
+    // where billed = sum(freight + otherCharges - advance).
+    const [billedByParty, paymentsByParty] = await Promise.all([
+      Bilty.aggregate([
+        { $match: { company: companyId } },
+        {
+          $group: {
+            _id: '$party',
+            total: { $sum: { $subtract: [{ $add: ['$freight', '$otherCharges'] }, '$advance'] } },
+          },
+        },
+      ]),
+      Payment.aggregate([
+        { $match: { company: companyId } },
+        { $group: { _id: { party: '$party', direction: '$direction' }, total: { $sum: '$amount' } } },
+      ]),
+    ]);
+
+    const billedMap = new Map(billedByParty.map((b) => [String(b._id), b.total]));
+    const inMap = new Map();
+    const outMap = new Map();
+    for (const row of paymentsByParty) {
+      const pid = String(row._id.party);
+      if (row._id.direction === 'in') inMap.set(pid, row.total);
+      else if (row._id.direction === 'out') outMap.set(pid, row.total);
+    }
+
+    const withBalance = parties.map((p) => {
+      const pid = String(p._id);
+      const billed = billedMap.get(pid) || 0;
+      const paidIn = inMap.get(pid) || 0;
+      const paidOut = outMap.get(pid) || 0;
+      return { ...p, balance: (p.openingBalance || 0) + billed - paidIn + paidOut };
+    });
+
+    res.json({ parties: withBalance });
+  })
+);
+
+router.post(
+  '/',
+  requireAuth,
+  asyncHandler(async (req, res) => {
     const { name, type, phone, gstin, address, opening_balance } = req.body;
     if (!name) return res.status(400).json({ error: 'Party name is required.' });
     const party = await Party.create({
@@ -59,13 +95,13 @@ router.post('/', requireAuth, async (req, res) => {
       openingBalance: parseFloat(opening_balance) || 0,
     });
     res.status(201).json({ party });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+  })
+);
 
-router.get('/:id', requireAuth, async (req, res) => {
-  try {
+router.get(
+  '/:id',
+  requireAuth,
+  asyncHandler(async (req, res) => {
     const info = await computeBalance(req.user.companyId, req.params.id);
     if (!info) return res.status(404).json({ error: 'Party not found.' });
 
@@ -73,13 +109,13 @@ router.get('/:id', requireAuth, async (req, res) => {
     const payments = await Payment.find({ company: req.user.companyId, party: req.params.id }).sort({ paymentDate: -1 });
 
     res.json({ party: info.party, balance: info.balance, bilties, payments });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+  })
+);
 
-router.post('/:id/payments', requireAuth, async (req, res) => {
-  try {
+router.post(
+  '/:id/payments',
+  requireAuth,
+  asyncHandler(async (req, res) => {
     const { amount, direction, note, payment_date } = req.body;
     if (!amount || !direction) return res.status(400).json({ error: 'Amount and direction are required.' });
     const payment = await Payment.create({
@@ -91,9 +127,7 @@ router.post('/:id/payments', requireAuth, async (req, res) => {
       paymentDate: payment_date || new Date().toISOString().slice(0, 10),
     });
     res.status(201).json({ payment });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+  })
+);
 
 module.exports = router;
