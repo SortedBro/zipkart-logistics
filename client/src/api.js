@@ -1,4 +1,17 @@
-const API_URL = import.meta.env.VITE_API_URL || '';
+const DEFAULT_RENDER_BACKEND = 'https://zipkart-logistics.onrender.com';
+
+function getApiUrl() {
+  const envUrl = import.meta.env.VITE_API_URL;
+  if (envUrl && envUrl.trim()) {
+    return envUrl.trim();
+  }
+  if (typeof window !== 'undefined' && window.location.hostname.endsWith('.onrender.com')) {
+    return DEFAULT_RENDER_BACKEND;
+  }
+  return '';
+}
+
+const API_URL = getApiUrl();
 const BASE = `${API_URL.replace(/\/$/, '')}/api`;
 
 async function request(path, options = {}) {
