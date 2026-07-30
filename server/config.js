@@ -35,10 +35,10 @@ if (EXAMPLE_SECRETS.includes(JWT_SECRET)) {
 const corsOrigins = new Set(
   (process.env.CORS_ORIGINS || '')
     .split(',')
-    .map((s) => s.trim())
+    .map((s) => s.trim().replace(/\/$/, ''))
     .filter(Boolean)
 );
-const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+const clientUrl = (process.env.CLIENT_URL || 'http://localhost:5173').trim().replace(/\/$/, '');
 corsOrigins.add(clientUrl);
 if (!isProd) {
   corsOrigins.add('http://localhost:5173');

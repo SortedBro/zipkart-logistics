@@ -32,7 +32,9 @@ app.use(
 app.use(
   cors({
     origin(origin, callback) {
-      if (!origin || config.corsOrigins.includes(origin)) {
+      if (!origin) return callback(null, true);
+      const cleanOrigin = origin.trim().replace(/\/$/, '');
+      if (config.corsOrigins.includes(cleanOrigin) || config.corsOrigins.includes(origin)) {
         return callback(null, true);
       }
       return callback(new Error(`Origin not allowed by CORS: ${origin}`));

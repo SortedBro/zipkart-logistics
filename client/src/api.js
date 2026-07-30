@@ -2,11 +2,21 @@ const API_URL = import.meta.env.VITE_API_URL || '';
 const BASE = `${API_URL.replace(/\/$/, '')}/api`;
 
 async function request(path, options = {}) {
-  const res = await fetch(`${BASE}${path}`, {
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
-    ...options,
-  });
+  let res;
+  try {
+    res = await fetch(`${BASE}${path}`, {
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      ...options,
+    });
+  } catch (err) {
+    if (err.name === 'TypeError' || err.message === 'Failed to fetch') {
+      throw new Error(
+        'Unable to connect to server ("Failed to fetch"). Please verify backend URL and CORS settings on Render.'
+      );
+    }
+    throw err;
+  }
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
     throw new Error(data.error || 'Something went wrong');
@@ -19,11 +29,21 @@ async function upload(path, file, { type } = {}) {
   const body = new FormData();
   body.append('file', file);
   const qs = type ? `?type=${encodeURIComponent(type)}` : '';
-  const res = await fetch(`${BASE}${path}${qs}`, {
-    method: 'POST',
-    credentials: 'include',
-    body,
-  });
+  let res;
+  try {
+    res = await fetch(`${BASE}${path}${qs}`, {
+      method: 'POST',
+      credentials: 'include',
+      body,
+    });
+  } catch (err) {
+    if (err.name === 'TypeError' || err.message === 'Failed to fetch') {
+      throw new Error(
+        'Unable to connect to server ("Failed to fetch"). Please verify backend URL and CORS settings on Render.'
+      );
+    }
+    throw err;
+  }
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
     throw new Error(data.error || 'Upload failed');
