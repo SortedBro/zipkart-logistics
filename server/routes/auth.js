@@ -10,10 +10,13 @@ const { authLimiter } = require('../middleware/rateLimit');
 const router = express.Router();
 
 function signToken(user, companyName) {
+  const companyId = user.company
+    ? (user.company._id ? user.company._id.toString() : user.company.toString())
+    : null;
   return jwt.sign(
     {
       id: user._id.toString(),
-      companyId: user.company.toString(),
+      companyId,
       name: user.name,
       email: user.email,
       role: user.role,
