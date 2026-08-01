@@ -1,10 +1,34 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { api } from '../../api';
+import { api, isPdfDoc } from '../../api';
 import Alert from '../../components/Alert.jsx';
 
 function money(n) {
   return (Number(n) || 0).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+}
+
+function Field({ label, value }) {
+  if (!value) return null;
+  return (
+    <div>
+      <span className="text-slate-400 block text-[11px]">{label}</span>
+      <span className="font-semibold text-slate-700 text-sm break-words">{value}</span>
+    </div>
+  );
+}
+
+function DocPreview({ label, value }) {
+  if (!value) return null;
+  return (
+    <a href={value} target="_blank" rel="noreferrer" className="border border-slate-200 rounded-lg p-2 flex flex-col items-center justify-center text-center bg-slate-50 hover:bg-slate-100 transition">
+      {isPdfDoc(value) ? (
+        <svg className="w-8 h-8 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" /></svg>
+      ) : (
+        <img src={value} alt={label} className="h-14 object-contain" />
+      )}
+      <span className="text-[11px] font-medium text-slate-600 mt-1">{label}</span>
+    </a>
+  );
 }
 
 export default function PartyShow() {
@@ -60,6 +84,47 @@ export default function PartyShow() {
 
       <div className="grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
+          {(() => {
+            const acc = party.account || {};
+            const docs = party.documents || {};
+            const hasDetails =
+              party.email || party.address || party.gstin || party.panNumber || party.aadhaarNumber ||
+              party.category || party.managerName || party.managerNumber ||
+              acc.accountName || acc.accountNumber || acc.ifsc || acc.upiId;
+            const hasDocs = docs.gst || docs.panCard || docs.visitingCard || docs.aadhaar;
+            if (!hasDetails && !hasDocs) return null;
+            return (
+              <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-4">
+                <h2 className="font-semibold border-b border-slate-100 pb-2">Details &amp; Documents</h2>
+                {hasDetails && (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    <Field label="Email" value={party.email} />
+                    <Field label="Category" value={party.category} />
+                    <Field label="GST Number" value={party.gstin} />
+                    <Field label="PAN Number" value={party.panNumber} />
+                    <Field label="Aadhaar Number" value={party.aadhaarNumber} />
+                    <Field label="Opening Date" value={party.openingDate} />
+                    <Field label="Manager" value={party.managerName} />
+                    <Field label="Manager Number" value={party.managerNumber} />
+                    <Field label="Address" value={party.address} />
+                    <Field label="Account Name" value={acc.accountName} />
+                    <Field label="Account Number" value={acc.accountNumber} />
+                    <Field label="IFSC" value={acc.ifsc} />
+                    <Field label="UPI ID" value={acc.upiId} />
+                  </div>
+                )}
+                {hasDocs && (
+                  <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 pt-2 border-t border-slate-100">
+                    <DocPreview label="GST" value={docs.gst} />
+                    <DocPreview label="PAN Card" value={docs.panCard} />
+                    <DocPreview label="Visiting Card" value={docs.visitingCard} />
+                    <DocPreview label="Aadhaar" value={docs.aadhaar} />
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+
           <div className="bg-white rounded-xl border border-slate-200 p-5">
             <h2 className="font-semibold mb-4">Bilty History</h2>
             {!bilties.length && <p className="text-sm text-slate-400">Is party ke liye koi bilty nahi hai.</p>}

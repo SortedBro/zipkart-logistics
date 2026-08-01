@@ -42,16 +42,50 @@ router.post(
       truck_id,
       consignor,
       consignee,
+      paidBy,
       from_city,
       to_city,
+      shipmentMode,
+      vehicleSize,
+      driverName,
+      ewayBillNo,
+      ewayBillExpiry,
+      containerNo,
       material,
+      packingType,
+      quantity,
       weight,
+      invoiceNumber,
+      invoiceDate,
+      hsnCode,
+      valueOfGoods,
+      privateMark,
+      insured,
       freight,
       advance,
       other_charges,
+      actualWeight,
+      chargedWeight,
+      rateType,
+      cgstPercent,
+      sgstPercent,
+      igstPercent,
+      tax,
+      paymentType,
+      gstPaidBy,
     } = req.body;
 
     if (!party_id || !bilty_date) return res.status(400).json({ error: 'Party and date are required.' });
+
+    const freightNum = parseFloat(freight) || 0;
+    const otherChargesNum = parseFloat(other_charges) || 0;
+    const cgst = parseFloat(cgstPercent) || 0;
+    const sgst = parseFloat(sgstPercent) || 0;
+    const igst = parseFloat(igstPercent) || 0;
+    const taxNum = parseFloat(tax) || 0;
+    // Display total only — does NOT affect the ledger/P&L, which use freight/otherCharges/advance.
+    const gstAmount = (freightNum * (cgst + sgst + igst)) / 100;
+    const biltyAmount = freightNum + otherChargesNum + gstAmount + taxNum;
 
     const bilty = await Bilty.create({
       company: req.user.companyId,
@@ -61,13 +95,38 @@ router.post(
       truck: truck_id || undefined,
       consignor,
       consignee,
+      paidBy,
       fromCity: from_city,
       toCity: to_city,
+      shipmentMode: shipmentMode || 'Road',
+      vehicleSize,
+      driverName,
+      ewayBillNo,
+      ewayBillExpiry,
+      containerNo,
       material,
+      packingType,
+      quantity: quantity !== undefined && quantity !== '' ? Number(quantity) : undefined,
       weight: parseFloat(weight) || undefined,
-      freight: parseFloat(freight) || 0,
+      invoiceNumber,
+      invoiceDate,
+      hsnCode,
+      valueOfGoods: valueOfGoods !== undefined && valueOfGoods !== '' ? Number(valueOfGoods) : undefined,
+      privateMark,
+      insured: Boolean(insured),
+      freight: freightNum,
       advance: parseFloat(advance) || 0,
-      otherCharges: parseFloat(other_charges) || 0,
+      otherCharges: otherChargesNum,
+      actualWeight: actualWeight !== undefined && actualWeight !== '' ? Number(actualWeight) : undefined,
+      chargedWeight: chargedWeight !== undefined && chargedWeight !== '' ? Number(chargedWeight) : undefined,
+      rateType: rateType || 'FIXED',
+      cgstPercent: cgst,
+      sgstPercent: sgst,
+      igstPercent: igst,
+      tax: taxNum,
+      biltyAmount,
+      paymentType: paymentType || 'To Be Billed',
+      gstPaidBy: gstPaidBy || 'Transporter',
       createdBy: req.user.id,
     });
 

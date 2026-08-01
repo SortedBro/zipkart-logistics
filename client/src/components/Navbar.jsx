@@ -8,10 +8,11 @@ export default function Navbar() {
 
   const links = [
     { to: '/dashboard', label: 'Dashboard' },
-    { to: '/bilties', label: 'Bilty' },
-    { to: '/parties', label: 'Parties' },
-    { to: '/trucks', label: 'Trucks' },
-    { to: '/trips', label: 'Trips' },
+    { to: '/bilties',   label: 'Bilty' },
+    { to: '/parties',   label: 'Parties' },
+    { to: '/trucks',    label: 'Trucks' },
+    { to: '/trips',     label: 'Trips' },
+    { to: '/tracking',  label: '📡 Tracking' },
   ];
   if (user?.role === 'owner') {
     links.push({ to: '/staff', label: 'Staff' });

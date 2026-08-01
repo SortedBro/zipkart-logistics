@@ -83,16 +83,41 @@ router.post(
   '/',
   requireAuth,
   asyncHandler(async (req, res) => {
-    const { name, type, phone, gstin, address, opening_balance } = req.body;
+    const {
+      name,
+      type,
+      phone,
+      email,
+      gstin,
+      address,
+      opening_balance,
+      openingDate,
+      aadhaarNumber,
+      panNumber,
+      category,
+      managerName,
+      managerNumber,
+      account,
+      documents,
+    } = req.body;
     if (!name) return res.status(400).json({ error: 'Party name is required.' });
     const party = await Party.create({
       company: req.user.companyId,
       name,
       type: type || 'customer',
       phone,
+      email,
       gstin,
       address,
       openingBalance: parseFloat(opening_balance) || 0,
+      openingDate,
+      aadhaarNumber,
+      panNumber,
+      category,
+      managerName,
+      managerNumber,
+      account: account || {},
+      documents: documents || {},
     });
     res.status(201).json({ party });
   })

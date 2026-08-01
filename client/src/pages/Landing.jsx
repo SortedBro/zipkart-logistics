@@ -230,8 +230,15 @@ export default function Landing() {
       </header>
 
       {/* 3. Hero Section */}
-      <section className="relative bg-gradient-to-r from-[#0F1E42] via-[#1A2E63] to-[#0F1E42] text-white overflow-hidden py-24">
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+      <section className="relative bg-slate-900 text-white overflow-hidden py-24">
+        {/* Hero Background Image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url('/hero-bg.png')` }}
+        ></div>
+        {/* Gradient Overlay for Text Readability & Aesthetics */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0B1530]/90 via-[#0F1E42]/85 to-[#0B1530]/75 backdrop-blur-[1px]"></div>
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 grid lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-7 space-y-6">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-500/20 border border-orange-400/30 text-orange-300 text-xs font-bold uppercase tracking-widest">
@@ -262,12 +269,12 @@ export default function Landing() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
               </Link>
-              <a
-                href="#contact"
-                className="px-7 py-3.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-semibold text-sm border border-white/20 transition"
+              <Link
+                to="/track"
+                className="px-7 py-3.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-semibold text-sm border border-white/20 transition flex items-center gap-2"
               >
-                Request Access
-              </a>
+                📍 Track Shipment
+              </Link>
             </div>
           </div>
 
