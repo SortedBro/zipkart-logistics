@@ -234,18 +234,23 @@ export default function Landing() {
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 grid lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs font-semibold uppercase tracking-widest">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-500/20 border border-orange-400/30 text-orange-300 text-xs font-bold uppercase tracking-widest">
               <span className="w-2 h-2 rounded-full bg-orange-400 animate-ping"></span>
-              Enterprise Operations &amp; Fleet Portal
+              Complete Transport &amp; Logistics Agency
             </div>
 
             <h1 className="text-3xl sm:text-5xl font-extrabold leading-tight tracking-tight text-white">
-              Connecting India, Delivering Trust — <span className="text-orange-400">Integrated Operations</span> Portal.
+              Moving goods.<br />
+              <span className="text-orange-400">Moving cities forward.</span>
             </h1>
 
             <p className="text-base sm:text-lg text-slate-300 max-w-2xl leading-relaxed">
-              Dedicated Enterprise Management System for <strong>Zipkart Logistics</strong> teams and fleet operators. Manage Bilty dispatch, truck profit analytics, party ledgers, and staff operations with 100% data security.
+              India's technology-first mid-mile logistics solution. Mid-mile logistics in Indian cities is broken, fragmented, manual, and unreliable. We built the technology and the network to fix it.
             </p>
+
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-white/10 border border-white/15 text-orange-400 text-sm font-bold">
+              <span>200+ cities. One platform.</span>
+            </div>
 
             <div className="pt-4 flex flex-wrap items-center gap-4">
               <Link
