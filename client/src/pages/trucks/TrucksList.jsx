@@ -18,7 +18,7 @@ export default function TrucksList() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Trucks</h1>
-        <Link to="/trucks/new" className="bg-accent-500 hover:bg-accent-600 text-white text-sm font-semibold px-4 py-2 rounded-lg">
+        <Link to="/trucks/new" className="bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold px-4 py-2 rounded-lg">
           + Add Truck
         </Link>
       </div>

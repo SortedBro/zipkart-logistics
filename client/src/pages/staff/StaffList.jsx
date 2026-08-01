@@ -27,7 +27,7 @@ export default function StaffList() {
     <div className="max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Staff &amp; Roles</h1>
-        <Link to="/staff/new" className="bg-accent-500 hover:bg-accent-600 text-white text-sm font-semibold px-4 py-2 rounded-lg">
+        <Link to="/staff/new" className="bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold px-4 py-2 rounded-lg">
           + Add Staff
         </Link>
       </div>
