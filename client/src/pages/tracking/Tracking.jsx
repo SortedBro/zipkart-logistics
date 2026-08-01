@@ -14,6 +14,16 @@ const STAGES = [
 
 const STAGE_ORDER = STAGES.map((s) => s.key);
 
+// Sidebar items matching exact screenshot specification
+const SIDEBAR_STAGES = [
+  { key: 'all',           label: 'Active Tracking', sub: 'Trips needing stage updates', icon: '📡' },
+  { key: 'loading_in',    label: 'Loading In',      sub: 'Pickup arrival pending',      icon: '📦' },
+  { key: 'loading_out',   label: 'Loading Out',     sub: 'Pickup departure pending',    icon: '🚛' },
+  { key: 'in_transit',    label: 'In Transit',      sub: 'Location update pending',      icon: '🛣️' },
+  { key: 'unloading_in',  label: 'Unloading In',    sub: 'Destination arrival pending', icon: '📍' },
+  { key: 'unloading_out', label: 'Unloading Out',   sub: 'Destination departure pending',icon: '⬇️' },
+];
+
 function stageBadge(status) {
   const map = {
     loading_in:    'bg-amber-100 text-amber-700 border-amber-200',
@@ -133,7 +143,6 @@ function GpsModal({ trip, onClose, onUpdated }) {
   const [saving,       setSaving]       = useState(false);
   const [error,        setError]        = useState('');
 
-  // Auto-detect browser device GPS
   function detectDeviceGps() {
     if (!navigator.geolocation) {
       setError('Browser Geolocation is not supported.');
@@ -252,7 +261,6 @@ function TripCard({ trip, onUpdateClick, onGpsClick }) {
   const currentIdx = STAGE_ORDER.indexOf(trip.status);
   const [showMap, setShowMap] = useState(false);
 
-  // Level 3: WhatsApp alert helper
   function sendWhatsAppAlert() {
     const trackUrl = `${window.location.origin}/track/${trip.bilty?.lrNumber || ''}`;
     const text = `🚚 *Zipkart Shipment Update*\n\nLR Number: *${trip.bilty?.lrNumber || trip.tripId || 'N/A'}*\nStatus: *${STAGES.find(s => s.key === trip.status)?.label || trip.status}*\nTruck: ${trip.truck?.number || 'N/A'}\nRoute: ${trip.fromCity} ➔ ${trip.toCity}\n\nTrack Live GPS & Progress:\n👉 ${trackUrl}`;
@@ -281,14 +289,12 @@ function TripCard({ trip, onUpdateClick, onGpsClick }) {
         <div className="flex flex-col items-end gap-2">
           {stageBadge(trip.status)}
           <div className="flex items-center gap-1.5">
-            {/* Level 4: Live GPS Button */}
             <button
               onClick={() => onGpsClick(trip)}
               className="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1.5 rounded-lg font-semibold border border-slate-300 transition flex items-center gap-1"
             >
               <span>🛰️ GPS</span>
             </button>
-            {/* Stage update */}
             {trip.status !== 'delivered' && (
               <button
                 onClick={() => onUpdateClick(trip)}
@@ -334,7 +340,7 @@ function TripCard({ trip, onUpdateClick, onGpsClick }) {
         </div>
       </div>
 
-      {/* Level 4: Live Map Toggle */}
+      {/* Live Map Toggle */}
       <div>
         <button
           onClick={() => setShowMap(!showMap)}
@@ -368,7 +374,7 @@ function TripCard({ trip, onUpdateClick, onGpsClick }) {
         );
       })()}
 
-      {/* Level 3: WhatsApp Share & Link bar */}
+      {/* WhatsApp Share & Link bar */}
       <div className="flex items-center justify-between gap-2 text-xs text-slate-500 border-t border-slate-100 pt-2 flex-wrap">
         <button
           onClick={sendWhatsAppAlert}
@@ -430,18 +436,26 @@ export default function Tracking() {
     );
   });
 
-  const allTrips  = trips || [];
-  const stageCounts = STAGES.reduce((acc, s) => {
-    acc[s.key] = allTrips.filter((t) => t.status === s.key).length;
+  const allTrips = trips || [];
+
+  // Stage counts for badges
+  const stageCounts = SIDEBAR_STAGES.reduce((acc, item) => {
+    if (item.key === 'all') {
+      acc[item.key] = allTrips.length;
+    } else {
+      acc[item.key] = allTrips.filter((t) => t.status === item.key).length;
+    }
     return acc;
   }, {});
+
+  const currentActiveItem = SIDEBAR_STAGES.find((s) => s.key === activeStage) || SIDEBAR_STAGES[0];
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">📡 Live Tracking &amp; GPS Telematics</h1>
+          <h1 className="text-2xl font-bold text-slate-800">📡 Shipment Tracking</h1>
           <p className="text-sm text-slate-500 mt-0.5">Live status, stage progression, GPS map &amp; WhatsApp alerts</p>
         </div>
         {/* Search */}
@@ -459,59 +473,85 @@ export default function Tracking() {
 
       {error && <p className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-xl px-4 py-2">{error}</p>}
 
-      {/* Stage Filter Tabs */}
-      <div className="flex flex-wrap gap-2">
-        <button
-          onClick={() => setActiveStage('all')}
-          className={`px-4 py-2 rounded-xl text-sm font-semibold border transition ${
-            activeStage === 'all'
-              ? 'bg-blue-600 text-white border-blue-600'
-              : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
-          }`}
-        >
-          All Trips
-          <span className="ml-2 text-xs opacity-70">({allTrips.length})</span>
-        </button>
-        {STAGES.map((s) => (
-          <button
-            key={s.key}
-            onClick={() => setActiveStage(s.key)}
-            className={`px-4 py-2 rounded-xl text-sm font-semibold border transition ${
-              activeStage === s.key
-                ? 'bg-blue-600 text-white border-blue-600'
-                : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
-            }`}
-          >
-            {s.icon} {s.label}
-            <span className="ml-2 text-xs opacity-70">({stageCounts[s.key] || 0})</span>
-          </button>
-        ))}
-      </div>
+      {/* Two Column Layout: Left Sidebar Stages & Right Trips List */}
+      <div className="grid lg:grid-cols-12 gap-6 items-start">
+        {/* Left Column: Tracking Stages Vertical Card List */}
+        <div className="lg:col-span-4 space-y-3">
+          <h3 className="font-bold text-slate-700 text-sm px-1 uppercase tracking-wider">Tracking Stages</h3>
+          <div className="space-y-2.5">
+            {SIDEBAR_STAGES.map((item) => {
+              const isSelected = activeStage === item.key;
+              const count = stageCounts[item.key] || 0;
 
-      {/* Trips Grid */}
-      {trips === null ? (
-        <div className="text-center py-16 text-slate-400">
-          <div className="text-4xl mb-3 animate-spin">⚙️</div>
-          <p>Loading live trips…</p>
+              return (
+                <button
+                  key={item.key}
+                  onClick={() => setActiveStage(item.key)}
+                  className={`w-full text-left p-4 rounded-xl border transition-all flex items-center justify-between gap-3 ${
+                    isSelected
+                      ? 'bg-blue-50/60 border-blue-500 ring-2 ring-blue-500/20 shadow-sm'
+                      : 'bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50/80 shadow-xs'
+                  }`}
+                >
+                  <div className="space-y-0.5 min-w-0">
+                    <p className={`font-bold text-sm truncate ${isSelected ? 'text-blue-600' : 'text-slate-800'}`}>
+                      {item.label}
+                    </p>
+                    <p className="text-xs text-slate-500 font-medium truncate">
+                      {item.sub}
+                    </p>
+                  </div>
+                  <span className={`px-2.5 py-1 rounded-full text-xs font-bold shrink-0 ${
+                    isSelected
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-slate-100 text-slate-600'
+                  }`}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
-      ) : filtered.length === 0 ? (
-        <div className="text-center py-16 bg-white border border-slate-200 rounded-2xl text-slate-400">
-          <div className="text-5xl mb-3">🚛</div>
-          <p className="font-semibold text-slate-500">No trips found</p>
-          <p className="text-sm mt-1">Try changing the filter or search query.</p>
+
+        {/* Right Column: Stage Details & Trips List */}
+        <div className="lg:col-span-8 space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+            <h2 className="font-bold text-lg text-slate-800 flex items-center gap-2">
+              <span>{currentActiveItem.label}</span>
+              <span className="text-xs bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-full font-semibold">
+                {filtered.length} trips
+              </span>
+            </h2>
+          </div>
+
+          {trips === null ? (
+            <div className="text-center py-16 text-slate-400">
+              <div className="text-4xl mb-3 animate-spin">⚙️</div>
+              <p>Loading live trips…</p>
+            </div>
+          ) : filtered.length === 0 ? (
+            /* Exact TransportKhata style Empty State Box */
+            <div className="bg-sky-50/70 border border-sky-100 rounded-2xl p-16 text-center space-y-4">
+              <div className="w-16 h-16 mx-auto rounded-full bg-sky-100/80 flex items-center justify-center text-3xl text-sky-700">
+                🛣️
+              </div>
+              <h3 className="text-xl font-bold text-sky-950">No Trips Found !</h3>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {filtered.map((trip) => (
+                <TripCard
+                  key={trip._id}
+                  trip={trip}
+                  onUpdateClick={setModalTrip}
+                  onGpsClick={setGpsTrip}
+                />
+              ))}
+            </div>
+          )}
         </div>
-      ) : (
-        <div className="grid md:grid-cols-2 gap-5">
-          {filtered.map((trip) => (
-            <TripCard
-              key={trip._id}
-              trip={trip}
-              onUpdateClick={setModalTrip}
-              onGpsClick={setGpsTrip}
-            />
-          ))}
-        </div>
-      )}
+      </div>
 
       {/* Stage Update Modal */}
       {modalTrip && (
