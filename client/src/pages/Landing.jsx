@@ -7,11 +7,11 @@ const CLIENTS = [
     name: 'Flipkart',
     category: 'E-Commerce Marketplace',
     tagline: 'Full FTL & Regional Transport Partner',
-    bgColor: 'bg-blue-50 border-blue-200',
+    bgColor: 'bg-[#F0F6FF] border-[#D4E4FF]',
     logo: (
-      <div className="flex items-center gap-1 font-black text-2xl tracking-tighter text-[#2874F0]">
+      <div className="flex items-center gap-1.5 font-black text-2xl tracking-tighter text-[#2874F0]">
         <span>Flipkart</span>
-        <div className="w-6 h-6 rounded bg-[#FFE500] flex items-center justify-center text-[#2874F0] font-black text-xs shadow-sm transform rotate-3">
+        <div className="w-6 h-6 rounded-md bg-[#FFE500] flex items-center justify-center text-[#2874F0] font-black text-xs shadow-xs transform rotate-2">
           f
         </div>
       </div>
@@ -21,11 +21,11 @@ const CLIENTS = [
     name: 'Flipkart Minutes',
     category: 'Quick Commerce Logistics',
     tagline: '10-Minute Express Darkstore Transit',
-    bgColor: 'bg-pink-50 border-pink-200',
+    bgColor: 'bg-[#FFF0F5] border-[#FFD2E2]',
     logo: (
-      <div className="bg-[#9E0B49] text-white px-3.5 py-1.5 rounded-lg flex flex-col items-center shadow-md">
-        <span className="text-[10px] font-bold tracking-widest text-slate-200 uppercase">Flipkart</span>
-        <span className="text-[#FFEA00] font-black text-sm tracking-wider italic uppercase">MINUTES</span>
+      <div className="bg-[#8C0E3F] text-white px-4 py-2 rounded-xl flex flex-col items-center shadow-md border border-[#A5134F]">
+        <span className="text-[9px] font-extrabold tracking-widest text-slate-200 uppercase leading-none">FLIPKART</span>
+        <span className="text-[#FFDC00] font-black text-sm tracking-wider italic uppercase leading-none mt-1">MINUTES</span>
       </div>
     ),
   },
@@ -33,9 +33,9 @@ const CLIENTS = [
     name: 'Meesho',
     category: 'Social E-Commerce Leader',
     tagline: 'Pan-India Last Mile & PTL Dispatch',
-    bgColor: 'bg-purple-50 border-purple-200',
+    bgColor: 'bg-[#FAF0F7] border-[#F3D2E7]',
     logo: (
-      <div className="flex items-center gap-1 font-black text-2xl tracking-tight text-[#812450]">
+      <div className="flex items-center text-3xl font-black tracking-tight text-[#511035] font-sans">
         <span>meesho</span>
       </div>
     ),
@@ -44,12 +44,10 @@ const CLIENTS = [
     name: 'Myntra',
     category: 'Fashion & Lifestyle Retail',
     tagline: 'Dedicated Hub-to-Hub Express Transit',
-    bgColor: 'bg-orange-50 border-orange-200',
+    bgColor: 'bg-[#FFF6F0] border-[#FFE0CC]',
     logo: (
-      <div className="flex items-center gap-2">
-        <span className="text-2xl font-black bg-gradient-to-r from-pink-600 via-orange-500 to-pink-600 bg-clip-text text-transparent">
-          Myntra
-        </span>
+      <div className="flex items-center gap-1 text-2xl font-black tracking-tight text-[#E71C5D]">
+        <span>Myntra</span>
       </div>
     ),
   },
@@ -57,11 +55,11 @@ const CLIENTS = [
     name: 'Blinkit',
     category: 'Quick Commerce & Hyperlocal',
     tagline: 'Rapid Grocery & Darkstore Replenishment',
-    bgColor: 'bg-amber-50 border-amber-200',
+    bgColor: 'bg-[#FFFDE6] border-[#FFF1A8]',
     logo: (
-      <div className="flex items-center gap-0.5 text-2xl font-black">
+      <div className="flex items-center text-2xl font-black tracking-tight">
         <span className="text-slate-900">blink</span>
-        <span className="text-[#148535]">it</span>
+        <span className="text-[#0C8340]">it</span>
       </div>
     ),
   },
@@ -69,10 +67,11 @@ const CLIENTS = [
     name: 'V-Xpress',
     category: 'Express Cargo & Door-to-Door',
     tagline: 'Heavy Freight & Nationwide Parcel Express',
-    bgColor: 'bg-indigo-50 border-indigo-200',
+    bgColor: 'bg-[#F0F4FE] border-[#D2E0FD]',
     logo: (
-      <div className="flex items-center gap-1 text-2xl font-black text-[#1B365D]">
-        <span className="text-[#F58220] italic">V-</span>Xpress
+      <div className="flex items-center text-2xl font-black tracking-tight text-[#002B49]">
+        <span className="text-[#FF6600] italic">V-</span>
+        <span>Xpress</span>
       </div>
     ),
   },
