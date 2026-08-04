@@ -45,28 +45,41 @@ async function seed() {
     console.log(`[seed] using existing company "${company.name}"`);
   }
 
-  const existing = await User.findOne({ email: adminEmail });
-  if (existing) {
-    if (resetPassword) {
-      existing.passwordHash = bcrypt.hashSync(adminPassword, config.bcryptRounds);
-      existing.role = 'owner';
-      existing.active = true;
-      existing.company = company._id;
-      await existing.save();
-      console.log(`[seed] reset password for existing admin ${adminEmail}`);
+  const defaultUsers = [
+    { email: adminEmail || 'superadmin@tms.com', name: adminName || 'Super Admin', role: 'owner', password: adminPassword || 'password' },
+    { email: 'owner@tms.com', name: 'Fleet Owner', role: 'owner', password: 'password' },
+    { email: 'manager@tms.com', name: 'Logistics Manager', role: 'manager', password: 'password' },
+    { email: 'accountant@tms.com', name: 'Chief Accountant', role: 'accountant', password: 'password' },
+    { email: 'vendor@tms.com', name: 'Transport Vendor', role: 'vendor', password: 'password' },
+    { email: 'driver@tms.com', name: 'Lead Driver', role: 'driver', password: 'password' },
+  ];
+
+  for (const u of defaultUsers) {
+    const existing = await User.findOne({ email: u.email });
+    const passwordHash = bcrypt.hashSync(u.password, config.bcryptRounds);
+
+    if (existing) {
+      if (resetPassword) {
+        existing.passwordHash = passwordHash;
+        existing.role = u.role;
+        existing.active = true;
+        existing.company = company._id;
+        await existing.save();
+        console.log(`[seed] reset password for existing user ${u.email}`);
+      } else {
+        console.log(`[seed] user ${u.email} already exists — skipping.`);
+      }
     } else {
-      console.log(`[seed] admin ${adminEmail} already exists — skipping (set SEED_RESET_PASSWORD=true to reset).`);
+      await User.create({
+        company: company._id,
+        name: u.name,
+        email: u.email,
+        passwordHash,
+        role: u.role,
+        active: true,
+      });
+      console.log(`[seed] created user ${u.email} (${u.role})`);
     }
-  } else {
-    await User.create({
-      company: company._id,
-      name: adminName,
-      email: adminEmail,
-      passwordHash: bcrypt.hashSync(adminPassword, config.bcryptRounds),
-      role: 'owner',
-      active: true,
-    });
-    console.log(`[seed] created admin ${adminEmail}`);
   }
 
   await mongoose.disconnect();

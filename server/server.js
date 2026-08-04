@@ -73,14 +73,46 @@ app.use('/api/staff', require('./routes/staff'));
 app.use('/api/settings', require('./routes/settings'));
 app.use('/api/uploads', require('./routes/uploads'));
 
+app.use('/api/drivers', require('./routes/drivers'));
+app.use('/api/invoices', require('./routes/invoices'));
+app.use('/api/expenses', require('./routes/expenses'));
+app.use('/api/loans', require('./routes/loans'));
+app.use('/api/transactions', require('./routes/transactions'));
+app.use('/api/fuel', require('./routes/fuel'));
+app.use('/api/vendors', require('./routes/vendors'));
+app.use('/api/inventory', require('./routes/inventory'));
+app.use('/api/attendance', require('./routes/attendance'));
+app.use('/api/salaries', require('./routes/salaries'));
+app.use('/api/documents', require('./routes/documents'));
+app.use('/api/reports', require('./routes/reports'));
+
 // 404 for unmatched routes, then centralized error handler (must be last).
 app.use(notFound);
 app.use(errorHandler);
 
 async function start() {
   await connectDB();
-  const server = app.listen(config.port, () => {
-    console.log(`Zipkart Integrated Logistics API running on port ${config.port} (${config.env})`);
+  const http = require('http');
+  const server = http.createServer(app);
+  const { Server } = require('socket.io');
+
+  const io = new Server(server, {
+    cors: {
+      origin: '*',
+      credentials: true,
+    },
+  });
+
+  io.on('connection', (socket) => {
+    socket.on('join_room', (room) => {
+      if (room) socket.join(String(room).toUpperCase());
+    });
+  });
+
+  app.set('io', io);
+
+  server.listen(config.port, () => {
+    console.log(`Zipkart Realtime TMS API running on port ${config.port} (${config.env})`);
   });
 
   // Graceful shutdown so in-flight requests finish and the DB socket closes cleanly.

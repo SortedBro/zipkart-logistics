@@ -13,7 +13,7 @@ router.get(
   requireOwner,
   asyncHandler(async (req, res) => {
     const staff = await User.find({ company: req.user.companyId })
-      .select('name email role active createdAt')
+      .select('name email role permissions active createdAt')
       .sort({ createdAt: 1 });
     res.json({ staff });
   })
@@ -24,20 +24,31 @@ router.post(
   requireAuth,
   requireOwner,
   asyncHandler(async (req, res) => {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, permissions } = req.body;
     if (!name || !email || !password) return res.status(400).json({ error: 'All fields are required.' });
     if (password.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters.' });
     const existing = await User.findOne({ email: email.toLowerCase() });
     if (existing) return res.status(400).json({ error: 'A user with this email already exists.' });
     const passwordHash = bcrypt.hashSync(password, config.bcryptRounds);
+    
+    const defaultPerms = {
+      dashboard: true,
+      bilties: true,
+      parties: true,
+      trucks: true,
+      trips: true,
+      tracking: true,
+    };
+
     const user = await User.create({
       company: req.user.companyId,
       name,
       email: email.toLowerCase(),
       passwordHash,
       role: role === 'owner' ? 'owner' : 'staff',
+      permissions: role === 'owner' ? defaultPerms : (permissions || defaultPerms),
     });
-    res.status(201).json({ user: { id: user._id, name: user.name, email: user.email, role: user.role } });
+    res.status(201).json({ user: { id: user._id, name: user.name, email: user.email, role: user.role, permissions: user.permissions } });
   })
 );
 
@@ -52,6 +63,27 @@ router.patch(
     user.active = !user.active;
     await user.save();
     res.json({ user: { id: user._id, active: user.active } });
+  })
+);
+
+router.patch(
+  '/:id/permissions',
+  requireAuth,
+  requireOwner,
+  asyncHandler(async (req, res) => {
+    const { permissions } = req.body;
+    if (!permissions || typeof permissions !== 'object') {
+      return res.status(400).json({ error: 'Invalid permissions payload.' });
+    }
+    const user = await User.findOne({ _id: req.params.id, company: req.user.companyId });
+    if (!user) return res.status(404).json({ error: 'User not found.' });
+    
+    user.permissions = {
+      ...user.permissions,
+      ...permissions,
+    };
+    await user.save();
+    res.json({ user: { id: user._id, role: user.role, permissions: user.permissions } });
   })
 );
 

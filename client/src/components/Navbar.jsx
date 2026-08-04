@@ -6,17 +6,22 @@ export default function Navbar() {
   const { user, logout } = useAuth();
   const location = useLocation();
 
-  const links = [
-    { to: '/dashboard', label: 'Dashboard' },
-    { to: '/bilties',   label: 'Bilty' },
-    { to: '/parties',   label: 'Parties' },
-    { to: '/trucks',    label: 'Trucks' },
-    { to: '/trips',     label: 'Trips' },
-    { to: '/tracking',  label: '📡 Tracking' },
+  const perms = user?.permissions || { dashboard: true, bilties: true, parties: true, trucks: true, trips: true, tracking: true };
+
+  const allLinks = [
+    { to: '/dashboard', label: 'Dashboard', key: 'dashboard' },
+    { to: '/bilties',   label: 'Bilty',     key: 'bilties' },
+    { to: '/parties',   label: 'Parties',   key: 'parties' },
+    { to: '/trucks',    label: 'Trucks',    key: 'trucks' },
+    { to: '/trips',     label: 'Trips',     key: 'trips' },
+    { to: '/tracking',  label: '📡 Tracking', key: 'tracking' },
   ];
+
+  const links = allLinks.filter(l => user?.role === 'owner' || perms[l.key] !== false);
+
   if (user?.role === 'owner') {
-    links.push({ to: '/staff', label: 'Staff' });
-    links.push({ to: '/settings', label: 'Settings' });
+    links.push({ to: '/staff', label: 'Staff', key: 'staff' });
+    links.push({ to: '/settings', label: 'Settings', key: 'settings' });
   }
 
   const roleLabel = user?.role === 'owner' ? 'Admin' : 'Employee';

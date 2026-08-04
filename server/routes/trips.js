@@ -210,6 +210,15 @@ router.post(
     );
 
     if (!trip) return res.status(404).json({ error: 'Shipment trip not found.' });
+
+    const io = req.app.get('io');
+    if (io && lrNumber) {
+      io.to(lrNumber.trim().toUpperCase()).emit('gps_update', {
+        currentGps: trip.currentGps,
+        gpsPings: trip.gpsPings,
+      });
+    }
+
     res.json({ success: true, currentGps: trip.currentGps });
   })
 );
@@ -261,8 +270,19 @@ router.get(
 
     const trip = await Trip.findOne({ bilty: bilty._id });
 
+    const createdDate = bilty.createdAt || bilty.biltyDate || new Date();
+    const deliveryStart = new Date(createdDate);
+    deliveryStart.setDate(deliveryStart.getDate() + 3);
+    const deliveryEnd = new Date(createdDate);
+    deliveryEnd.setDate(deliveryEnd.getDate() + 5);
+
+    const expectedDelivery = `${deliveryStart.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })} - ${deliveryEnd.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}`;
+    const awbNumber = bilty.awbNumber || `AWB${String(bilty._id).slice(-10).toUpperCase()}`;
+
     const publicData = {
       lrNumber:   bilty.lrNumber,
+      awbNumber,
+      expectedDelivery,
       biltyDate:  bilty.biltyDate,
       fromCity:   bilty.fromCity,
       toCity:     bilty.toCity,
@@ -281,10 +301,8 @@ router.get(
       },
       status:         trip?.status         || 'loading_in',
       trackingEvents: trip?.trackingEvents || [],
-      // Level 4: Live GPS Data
       currentGps:     trip?.currentGps     || null,
       gpsPings:       trip?.gpsPings       || [],
-      // Level 3: Notifications summary
       notificationsSent: (trip?.notificationsSent || []).map(n => ({
         type: n.type,
         sentAt: n.sentAt,

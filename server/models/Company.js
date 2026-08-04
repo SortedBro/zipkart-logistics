@@ -13,6 +13,11 @@ const companySchema = new mongoose.Schema(
     pincode: { type: String, trim: true },
     phone: { type: String, trim: true },
     email: { type: String, trim: true, lowercase: true },
+    currencySymbol: { type: String, default: '₹' },
+    defaultTaxPercent: { type: Number, default: 18 },
+    tripPrefix: { type: String, default: 'TRIP-' },
+    invoicePrefix: { type: String, default: 'INV-' },
+    lrPrefix: { type: String, default: 'LR-' },
   },
   { timestamps: true }
 );

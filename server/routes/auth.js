@@ -20,6 +20,7 @@ function signToken(user, companyName) {
       name: user.name,
       email: user.email,
       role: user.role,
+      permissions: user.permissions,
       companyName,
     },
     config.jwtSecret,
@@ -61,6 +62,7 @@ router.post(
         name: user.name,
         email: user.email,
         role: user.role,
+        permissions: user.permissions || { dashboard: true, bilties: true, parties: true, trucks: true, trips: true, tracking: true },
         companyName: user.company ? user.company.name : '',
       },
     });
@@ -72,16 +74,19 @@ router.post('/logout', (req, res) => {
   res.json({ ok: true });
 });
 
-router.get('/me', requireAuth, (req, res) => {
+router.get('/me', requireAuth, asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user.id).select('name email role permissions active');
+  if (!user || !user.active) return res.status(401).json({ error: 'User inactive' });
   res.json({
     user: {
-      id: req.user.id,
-      name: req.user.name,
-      email: req.user.email,
-      role: req.user.role,
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      permissions: user.permissions || { dashboard: true, bilties: true, parties: true, trucks: true, trips: true, tracking: true },
       companyName: req.user.companyName,
     },
   });
-});
+}));
 
 module.exports = router;
