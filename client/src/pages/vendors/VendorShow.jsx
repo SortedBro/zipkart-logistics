@@ -33,20 +33,17 @@ export default function VendorShow() {
 
   if (error || !vendorData) {
     return (
-      <AppShell>
-        <div className="space-y-4">
-          <Alert type="error" message={error || 'Vendor not found.'} />
-          <Link to="/vendors" className="text-sm font-bold text-brand-600">← Back to Vendors</Link>
-        </div>
-      </AppShell>
+      <div className="space-y-4">
+        <Alert type="error" message={error || 'Vendor not found.'} />
+        <Link to="/vendors" className="text-sm font-bold text-brand-600">← Back to Vendors</Link>
+      </div>
     );
   }
 
   const { vendor, linkedTrucks = [], trips = [], stats = {} } = vendorData;
 
   return (
-    <AppShell>
-      <div className="space-y-6">
+    <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
           <div>
@@ -166,6 +163,5 @@ export default function VendorShow() {
           )}
         </div>
       </div>
-    </AppShell>
   );
 }
