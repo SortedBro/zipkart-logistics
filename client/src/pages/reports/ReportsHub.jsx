@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import AppShell from '../../components/AppShell.jsx';
 import { api } from '../../api.js';
 
 export default function ReportsHub() {
@@ -19,7 +18,6 @@ export default function ReportsHub() {
   }, []);
 
   return (
-    <AppShell>
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-extrabold text-slate-900">Analytics & Reports Hub</h1>
@@ -74,6 +72,5 @@ export default function ReportsHub() {
           )}
         </div>
       </div>
-    </AppShell>
   );
 }

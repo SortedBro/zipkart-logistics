@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import AppShell from '../../components/AppShell.jsx';
 import { api } from '../../api.js';
 import Alert from '../../components/Alert.jsx';
 
@@ -86,7 +85,6 @@ export default function SalaryNew() {
   };
 
   return (
-    <AppShell>
       <div className="max-w-3xl mx-auto space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-extrabold text-slate-900">Generate Salary Slip</h1>
@@ -223,6 +221,5 @@ export default function SalaryNew() {
           </div>
         </form>
       </div>
-    </AppShell>
   );
 }

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import AppShell from '../../components/AppShell.jsx';
 import { api } from '../../api.js';
 import Alert from '../../components/Alert.jsx';
 
@@ -46,7 +45,6 @@ export default function DriversList() {
   });
 
   return (
-    <AppShell>
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
@@ -142,6 +140,5 @@ export default function DriversList() {
           </div>
         )}
       </div>
-    </AppShell>
   );
 }

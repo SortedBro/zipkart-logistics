@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import AppShell from '../../components/AppShell.jsx';
 import { api } from '../../api.js';
 import Alert from '../../components/Alert.jsx';
 
@@ -45,7 +44,6 @@ export default function VendorNew() {
   };
 
   return (
-    <AppShell>
       <div className="max-w-3xl mx-auto space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-extrabold text-slate-900">Add New Vendor</h1>
@@ -153,6 +151,5 @@ export default function VendorNew() {
           </div>
         </form>
       </div>
-    </AppShell>
   );
 }

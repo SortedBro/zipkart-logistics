@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import AppShell from '../../components/AppShell.jsx';
 import { api } from '../../api.js';
 import Alert from '../../components/Alert.jsx';
 
@@ -57,7 +56,6 @@ export default function FuelNew() {
   };
 
   return (
-    <AppShell>
       <div className="max-w-3xl mx-auto space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-extrabold text-slate-900">Add Fuel Log</h1>
@@ -173,6 +171,5 @@ export default function FuelNew() {
           </div>
         </form>
       </div>
-    </AppShell>
   );
 }

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import AppShell from '../../components/AppShell.jsx';
 import FileUploadBox from '../../components/FileUploadBox.jsx';
 import { api } from '../../api.js';
 import Alert from '../../components/Alert.jsx';
@@ -50,7 +49,6 @@ export default function DocumentNew() {
   };
 
   return (
-    <AppShell>
       <div className="max-w-2xl mx-auto space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-extrabold text-slate-900">Upload Document</h1>
@@ -156,6 +154,5 @@ export default function DocumentNew() {
           </div>
         </form>
       </div>
-    </AppShell>
   );
 }

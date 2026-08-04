@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import AppShell from '../../components/AppShell.jsx';
 import { api } from '../../api';
 import Alert from '../../components/Alert.jsx';
 
@@ -103,11 +102,12 @@ export default function BiltiesList() {
   };
 
   const handlePrint = (biltyId) => {
-    window.open(`/bilties/${biltyId}`, '_blank');
+    // Open bilty detail page; after load, user can use browser print (Ctrl+P).
+    // Use the full origin so the SPA _redirects rule serves index.html correctly.
+    window.open(`${window.location.origin}/bilties/${biltyId}`, '_blank');
   };
 
   return (
-    <AppShell>
       <div className="space-y-6">
         {/* Top Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -339,6 +339,5 @@ export default function BiltiesList() {
           </div>
         )}
       </div>
-    </AppShell>
   );
 }

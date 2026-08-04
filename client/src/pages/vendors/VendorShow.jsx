@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import AppShell from '../../components/AppShell.jsx';
 import { api } from '../../api.js';
 import Alert from '../../components/Alert.jsx';
 
@@ -28,9 +27,7 @@ export default function VendorShow() {
 
   if (loading) {
     return (
-      <AppShell>
         <div className="p-8 text-center text-slate-500">Loading vendor fleet & ledger...</div>
-      </AppShell>
     );
   }
 
