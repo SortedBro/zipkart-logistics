@@ -73,6 +73,7 @@ router.post(
       tax,
       paymentType,
       gstPaidBy,
+      status,
     } = req.body;
 
     if (!party_id || !bilty_date) return res.status(400).json({ error: 'Party and date are required.' });
@@ -83,7 +84,6 @@ router.post(
     const sgst = parseFloat(sgstPercent) || 0;
     const igst = parseFloat(igstPercent) || 0;
     const taxNum = parseFloat(tax) || 0;
-    // Display total only — does NOT affect the ledger/P&L, which use freight/otherCharges/advance.
     const gstAmount = (freightNum * (cgst + sgst + igst)) / 100;
     const biltyAmount = freightNum + otherChargesNum + gstAmount + taxNum;
 
@@ -127,6 +127,7 @@ router.post(
       biltyAmount,
       paymentType: paymentType || 'To Be Billed',
       gstPaidBy: gstPaidBy || 'Transporter',
+      status: status || 'Generated',
       createdBy: req.user.id,
     });
 
@@ -139,12 +140,33 @@ router.get(
   requireAuth,
   asyncHandler(async (req, res) => {
     const bilty = await Bilty.findOne({ _id: req.params.id, company: req.user.companyId })
-      .populate('party', 'name phone address')
-      .populate('truck', 'number driverName');
+      .populate('party', 'name phone address gstNumber')
+      .populate('truck', 'number driverName driverPhone');
     if (!bilty) return res.status(404).json({ error: 'Bilty not found.' });
 
     const balance = bilty.freight + bilty.otherCharges - bilty.advance;
     res.json({ bilty, balance });
+  })
+);
+
+router.put(
+  '/:id',
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const bilty = await Bilty.findOne({ _id: req.params.id, company: req.user.companyId });
+    if (!bilty) return res.status(404).json({ error: 'Bilty not found.' });
+
+    const fields = [
+      'lrNumber', 'biltyDate', 'consignor', 'consignee', 'paidBy', 'fromCity', 'toCity',
+      'material', 'packingType', 'quantity', 'weight', 'freight', 'advance', 'otherCharges',
+      'status', 'ewayBillNo', 'driverName'
+    ];
+    fields.forEach(f => {
+      if (req.body[f] !== undefined) bilty[f] = req.body[f];
+    });
+
+    await bilty.save();
+    res.json({ bilty });
   })
 );
 
@@ -156,10 +178,20 @@ router.patch(
     const bilty = await Bilty.findOneAndUpdate(
       { _id: req.params.id, company: req.user.companyId },
       { status },
-      { new: true, runValidators: true }
+      { new: true }
     );
     if (!bilty) return res.status(404).json({ error: 'Bilty not found.' });
     res.json({ bilty });
+  })
+);
+
+router.delete(
+  '/:id',
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const result = await Bilty.deleteOne({ _id: req.params.id, company: req.user.companyId });
+    if (result.deletedCount === 0) return res.status(404).json({ error: 'Bilty not found.' });
+    res.json({ success: true });
   })
 );
 
