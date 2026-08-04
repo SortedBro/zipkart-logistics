@@ -1,5 +1,7 @@
 const express = require('express');
 const Vendor = require('../models/Vendor');
+const Truck = require('../models/Truck');
+const Trip = require('../models/Trip');
 const { requireAuth } = require('../middleware/auth');
 const asyncHandler = require('../middleware/asyncHandler');
 
@@ -9,8 +11,39 @@ router.get(
   '/',
   requireAuth,
   asyncHandler(async (req, res) => {
-    const vendors = await Vendor.find({ company: req.user.companyId }).sort({ name: 1 });
-    res.json({ vendors });
+    const companyId = req.user.companyId;
+    const vendors = await Vendor.find({ company: companyId }).sort({ name: 1 }).lean();
+
+    // Attach linked trucks count to each vendor
+    const truckCounts = await Truck.aggregate([
+      { $match: { company: companyId, vendor: { $ne: null } } },
+      { $group: { _id: '$vendor', count: { $sum: 1 } } }
+    ]);
+    const countMap = new Map(truckCounts.map(c => [String(c._id), c.count]));
+
+    const result = vendors.map(v => ({
+      ...v,
+      linkedTrucksCount: countMap.get(String(v._id)) || 0,
+    }));
+
+    res.json({ vendors: result });
+  })
+);
+
+router.get(
+  '/:id',
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const vendor = await Vendor.findOne({ _id: req.params.id, company: req.user.companyId });
+    if (!vendor) return res.status(404).json({ error: 'Vendor not found.' });
+
+    const linkedTrucks = await Truck.find({ company: req.user.companyId, vendor: vendor._id }).sort({ number: 1 });
+    const truckIds = linkedTrucks.map(t => t._id);
+    const trips = await Trip.find({ company: req.user.companyId, truck: { $in: truckIds } }).sort({ createdAt: -1 });
+
+    const totalFreight = trips.reduce((sum, t) => sum + (t.freight || t.customerAmount || 0), 0);
+
+    res.json({ vendor, linkedTrucks, trips, stats: { totalTrucks: linkedTrucks.length, totalTrips: trips.length, totalFreight } });
   })
 );
 

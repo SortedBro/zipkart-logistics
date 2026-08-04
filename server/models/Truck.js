@@ -7,6 +7,7 @@ const truckSchema = new mongoose.Schema(
     type: { type: String },
     vehicleLength: { type: String },
     ownerType: { type: String, enum: ['own', 'market'], default: 'own' },
+    vendor: { type: mongoose.Schema.Types.ObjectId, ref: 'Vendor' },
     ownerName: { type: String },
     ownerPhone: { type: String },
     driverName: { type: String },

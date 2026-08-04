@@ -59,23 +59,37 @@ export default function VendorsList() {
                     <th className="px-4 py-3">Contact Person</th>
                     <th className="px-4 py-3">Mobile</th>
                     <th className="px-4 py-3">City</th>
-                    <th className="px-4 py-3">GST No</th>
+                    <th className="px-4 py-3">Linked Trucks</th>
                     <th className="px-4 py-3">Commission</th>
                     <th className="px-4 py-3">Balance</th>
+                    <th className="px-4 py-3 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200">
                   {vendors.map((v) => (
                     <tr key={v._id} className="hover:bg-slate-50">
-                      <td className="px-4 py-3 font-bold text-slate-900">{v.name}</td>
+                      <td className="px-4 py-3 font-bold text-slate-900">
+                        <Link to={`/vendors/${v._id}`} className="hover:text-brand-600">
+                          {v.name}
+                        </Link>
+                      </td>
                       <td className="px-4 py-3">{v.contactPerson || 'N/A'}</td>
                       <td className="px-4 py-3">{v.mobile}</td>
                       <td className="px-4 py-3">{v.city || 'N/A'}</td>
-                      <td className="px-4 py-3 text-slate-500 font-mono text-xs">{v.gstNumber || 'N/A'}</td>
+                      <td className="px-4 py-3">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800">
+                          🚚 {v.linkedTrucksCount || 0} Trucks
+                        </span>
+                      </td>
                       <td className="px-4 py-3 font-medium">
                         {v.commissionValue ? `${v.commissionValue}${v.commissionType === 'Percentage' ? '%' : ' ₹'}` : 'N/A'}
                       </td>
                       <td className="px-4 py-3 font-extrabold text-slate-900">₹{v.currentBalance?.toLocaleString()}</td>
+                      <td className="px-4 py-3 text-right">
+                        <Link to={`/vendors/${v._id}`} className="text-xs font-bold text-brand-600 hover:text-brand-800">
+                          View Fleet & Ledger →
+                        </Link>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

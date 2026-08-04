@@ -29,7 +29,11 @@ router.get(
   asyncHandler(async (req, res) => {
     const companyId = new mongoose.Types.ObjectId(req.user.companyId);
     // Exclude the heavy base64 `documents` blobs from the list payload.
-    const trucks = await Truck.find({ company: companyId }).select('-documents').sort({ number: 1 }).lean();
+    const trucks = await Truck.find({ company: companyId })
+      .select('-documents')
+      .populate('vendor', 'name mobile city commissionType commissionValue')
+      .sort({ number: 1 })
+      .lean();
 
     // Compute P&L for every truck in two aggregations instead of 2-per-truck (fixes N+1).
     const [incomeByTruck, expenseByTruck] = await Promise.all([
@@ -67,6 +71,7 @@ router.post(
       vehicleLength,
       owner_type,
       ownerType,
+      vendor,
       ownerName,
       ownerPhone,
       driver_name,
@@ -95,6 +100,7 @@ router.post(
       type,
       vehicleLength,
       ownerType: owner_type || ownerType || 'own',
+      vendor: vendor || null,
       ownerName,
       ownerPhone,
       driverName: driver_name || driverName,
@@ -128,6 +134,7 @@ router.put(
       'number',
       'type',
       'vehicleLength',
+      'vendor',
       'ownerName',
       'ownerPhone',
       'rcExpiryDate',

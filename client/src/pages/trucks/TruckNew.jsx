@@ -40,11 +40,13 @@ const DOC_DEFINITIONS = [
 
 export default function TruckNew() {
   const navigate = useNavigate();
+  const [vendors, setVendors] = useState([]);
   const [form, setForm] = useState({
     number: '',
     type: '',
     vehicleLength: '',
-    ownerType: 'own',
+    ownerType: 'market',
+    vendor: '',
     ownerName: '',
     ownerPhone: '',
     driverName: '',
@@ -76,6 +78,20 @@ export default function TruckNew() {
 
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    api.get('/vendors').then(res => setVendors(res.vendors || [])).catch(() => {});
+  }, []);
+
+  function handleVendorSelect(vendorId) {
+    const selected = vendors.find(v => v._id === vendorId);
+    setForm(f => ({
+      ...f,
+      vendor: vendorId,
+      ownerName: selected ? selected.name : f.ownerName,
+      ownerPhone: selected ? selected.mobile : f.ownerPhone,
+    }));
+  }
 
   function update(key, value) {
     setForm((f) => ({ ...f, [key]: value }));
@@ -232,7 +248,7 @@ export default function TruckNew() {
                     onChange={(e) => update('ownerType', e.target.value)}
                     className="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500"
                   />
-                  Market Truck
+                  Market Truck / Vendor
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
@@ -243,10 +259,34 @@ export default function TruckNew() {
                     onChange={(e) => update('ownerType', e.target.value)}
                     className="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500"
                   />
-                  My Truck
+                  My Company Truck
                 </label>
               </div>
             </div>
+
+            {/* Link to Vendor Account */}
+            {form.ownerType === 'market' && (
+              <div className="p-3.5 bg-blue-50/70 border border-blue-200 rounded-xl space-y-2">
+                <label className="block text-xs font-extrabold text-blue-900 uppercase">
+                  🔗 Link to Registered Vendor / Truck Owner
+                </label>
+                <select
+                  value={form.vendor}
+                  onChange={(e) => handleVendorSelect(e.target.value)}
+                  className="w-full border border-blue-300 rounded-lg px-3.5 py-2 text-sm text-slate-800 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select Registered Vendor (1 Vendor can own 1-10+ Trucks)</option>
+                  {vendors.map((v) => (
+                    <option key={v._id} value={v._id}>
+                      {v.name} ({v.mobile}) — {v.city || 'Vendor'}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-[11px] text-blue-700">
+                  Linking a vendor automatically assigns this truck under their vendor account and calculates truck trip settlements.
+                </p>
+              </div>
+            )}
 
             <div className="grid sm:grid-cols-2 gap-4">
               <div>

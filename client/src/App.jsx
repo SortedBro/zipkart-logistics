@@ -48,6 +48,7 @@ import FuelNew from './pages/fuel/FuelNew.jsx';
 
 import VendorsList from './pages/vendors/VendorsList.jsx';
 import VendorNew from './pages/vendors/VendorNew.jsx';
+import VendorShow from './pages/vendors/VendorShow.jsx';
 
 import InventoryList from './pages/inventory/InventoryList.jsx';
 import InventoryNew from './pages/inventory/InventoryNew.jsx';
@@ -114,6 +115,7 @@ export default function App() {
 
       <Route path="/vendors"     element={<ProtectedRoute><VendorsList /></ProtectedRoute>} />
       <Route path="/vendors/new" element={<ProtectedRoute><VendorNew /></ProtectedRoute>} />
+      <Route path="/vendors/:id" element={<ProtectedRoute><VendorShow /></ProtectedRoute>} />
 
       <Route path="/inventory"     element={<ProtectedRoute><InventoryList /></ProtectedRoute>} />
       <Route path="/inventory/new" element={<ProtectedRoute><InventoryNew /></ProtectedRoute>} />
