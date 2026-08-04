@@ -30,7 +30,7 @@ export default function InventoryList() {
       await api.patch(`/inventory/${id}/adjust`, { adjustment });
       fetchItems();
     } catch (err) {
-      alert(err.message);
+      setError(err.message);
     }
   };
 

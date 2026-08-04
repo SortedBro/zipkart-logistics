@@ -27,14 +27,13 @@ export default function DriversList() {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this driver?')) return;
+  const handleDelete = async (driver) => {
+    if (!window.confirm(`Delete driver "${driver.name}"? This cannot be undone.`)) return;
     try {
-      await api.get(`/drivers/${id}`); // check
-      await fetch(`/api/drivers/${id}`, { method: 'DELETE', credentials: 'include' });
-      setDrivers(drivers.filter(d => d._id !== id));
+      await api.delete(`/drivers/${driver._id}`);
+      setDrivers(prev => prev.filter(d => d._id !== driver._id));
     } catch (err) {
-      alert(err.message);
+      setError(err.message);
     }
   };
 
@@ -129,7 +128,7 @@ export default function DriversList() {
                       </td>
                       <td className="px-4 py-3 text-right space-x-2">
                         <button
-                          onClick={() => handleDelete(d._id)}
+                          onClick={() => handleDelete(d)}
                           className="text-rose-600 hover:text-rose-800 font-medium text-xs"
                         >
                           Delete

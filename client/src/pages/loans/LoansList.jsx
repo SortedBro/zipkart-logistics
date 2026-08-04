@@ -30,7 +30,7 @@ export default function LoansList() {
       await api.post(`/loans/${loanId}/pay-emi`, {});
       fetchLoans();
     } catch (err) {
-      alert(err.message);
+      setError(err.message);
     }
   };
 
